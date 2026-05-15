@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Bantu Guru Yuk | Piagam Naik Kelas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+/* ================================================================
+   BANTU GURU YUK | PIAGAM NAIK KELAS — all-in-one index.html
+   ================================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Lato',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;overflow-x:hidden}
+
+/* ---------- CSS VARIABLES ---------- */
+:root{
+  --gold:#c9a84c;--gold2:#f0d080;--gold3:#9a7228;--gold4:#fffbe8;
+  --navy:#1a3560;--navy2:#2d5fa8;--navy3:#6a9fd8;
+  --bg:#f0ebe0;--bg2:#e6e0d2;--bg3:#faf7f0;
+  --surface:rgba(255,255,255,0.90);--surface2:rgba(255,255,255,0.60);
+  --border:rgba(201,168,76,0.30);--border2:rgba(0,0,0,0.08);
+  --text:#1c1a2e;--text2:#4a4868;--text3:#9a98b8;
+  --shadow:0 4px 20px rgba(26,53,96,0.10);--shadow2:0 8px 40px rgba(26,53,96,0.16);
+  --radius:14px;--radius-sm:8px;--hh:60px;
+}
+[data-theme="dark"]{
+  --bg:#0d1220;--bg2:#121828;--bg3:#161e30;
+  --surface:rgba(18,24,40,0.95);--surface2:rgba(18,24,40,0.70);
+  --border:rgba(201,168,76,0.22);--border2:rgba(255,255,255,0.06);
+  --text:#f0e8d0;--text2:#a0a0c0;--text3:#585878;
+  --shadow:0 4px 20px rgba(0,0,0,0.40);--shadow2:0 8px 40px rgba(0,0,0,0.55);
+}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--gold3);border-radius:99px}
+
+/* ================================================================ LOADING */
+.ls{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:linear-gradient(135deg,#0a0f1e 0%,#1a3560 60%,#0a0f1e 100%);transition:opacity .6s,visibility .6s}
+.ls.out{opacity:0;visibility:hidden;pointer-events:none}
+.ls-rings{position:relative;width:88px;height:88px}
+.ls-ring{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;animation:spin 2s linear infinite}
+.ls-ring:nth-child(1){border-top-color:var(--gold);animation-duration:1.8s}
+.ls-ring:nth-child(2){inset:12px;border-right-color:var(--gold2);animation-duration:2.5s;animation-direction:reverse}
+.ls-ring:nth-child(3){inset:24px;border-bottom-color:var(--gold3);animation-duration:1.3s}
+.ls-ico{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px;animation:pulse 2s ease-in-out infinite}
+.ls-title{font-family:'Cinzel',serif;font-size:1.3rem;font-weight:700;color:#f0d080;letter-spacing:.06em}
+.ls-sub{font-size:.78rem;color:#6a7a9a;letter-spacing:.14em;text-transform:uppercase}
+.ls-bar-wrap{width:200px;height:4px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden}
+.ls-bar{height:100%;width:0;background:linear-gradient(90deg,var(--gold3),var(--gold2));border-radius:99px;transition:width .4s ease}
+.ls-status{font-size:.75rem;color:#5a6a8a;min-height:16px}
+
+/* ================================================================ GEN OVERLAY */
+.go{position:fixed;inset:0;z-index:8888;background:rgba(8,12,24,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.go.show{opacity:1;visibility:visible}
+.go-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:40px 48px;text-align:center;box-shadow:var(--shadow2);min-width:280px}
+.go-rings{position:relative;width:76px;height:76px;margin:0 auto 18px}
+.go-ring{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;animation:spin 2s linear infinite}
+.go-ring:nth-child(1){border-top-color:var(--gold);animation-duration:1.6s}
+.go-ring:nth-child(2){inset:10px;border-right-color:var(--navy3);animation-duration:2.2s;animation-direction:reverse}
+.go-ring:nth-child(3){inset:20px;border-bottom-color:var(--gold2);animation-duration:1.1s}
+.go-ico{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px;animation:pulse 1.5s ease-in-out infinite}
+.go-title{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;color:var(--gold);margin-bottom:6px}
+.go-count{font-size:.82rem;color:var(--text2);margin-bottom:14px}
+.go-pw{width:100%;height:5px;background:var(--border2);border-radius:99px;overflow:hidden}
+.go-p{height:100%;width:0;background:linear-gradient(90deg,var(--navy2),var(--gold));border-radius:99px;transition:width .25s ease}
+
+/* ================================================================ TOAST */
+.toast-wrap{position:fixed;bottom:20px;right:20px;z-index:7777;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 16px;font-size:.82rem;color:var(--text);box-shadow:var(--shadow2);display:flex;align-items:center;gap:9px;pointer-events:auto;animation:tIn .3s ease;max-width:300px}
+.toast.out{animation:tOut .3s ease forwards}
+.toast.success{border-left:3px solid #4caf82}
+.toast.error{border-left:3px solid #e05a5a}
+.toast.info{border-left:3px solid var(--gold)}
+
+/* ================================================================ HEADER */
+.hdr{position:sticky;top:0;z-index:200;height:var(--hh);background:var(--surface);border-bottom:1px solid var(--border);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:space-between;padding:0 22px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.brand{display:flex;align-items:center;gap:9px}
+.brand-ico{font-size:1.3rem}
+.brand-name{font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;color:var(--gold)}
+.brand-sep{color:var(--text3);margin:0 3px}
+.brand-sub{font-size:.78rem;color:var(--text2)}
+.hdr-r{display:flex;align-items:center;gap:9px}
+.free-badge{font-size:.65rem;font-weight:700;letter-spacing:.1em;background:linear-gradient(135deg,var(--gold3),var(--gold));color:#fff;padding:3px 9px;border-radius:99px}
+.theme-btn{width:34px;height:34px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .15s}
+.theme-btn:hover{background:var(--border2);transform:scale(1.08)}
+
+/* ================================================================ MAIN GRID */
+.main{display:grid;grid-template-columns:370px 1fr;min-height:calc(100vh - var(--hh));align-items:start}
+
+/* ================================================================ FORM COL */
+.fc{padding:20px 18px;display:flex;flex-direction:column;gap:14px;border-right:1px solid var(--border2);background:var(--bg)}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);transition:box-shadow .2s}
+.card:hover{box-shadow:var(--shadow2)}
+.ch{display:flex;align-items:center;gap:7px;margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid var(--border2)}
+.ch-ico{font-size:1rem}
+.ch h2{font-family:'Cinzel',serif;font-size:.82rem;font-weight:600;color:var(--gold3);letter-spacing:.05em}
+[data-theme="dark"] .ch h2{color:var(--gold2)}
+
+/* FORM */
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:9px}
+.fg label{font-size:.72rem;font-weight:700;color:var(--text2);letter-spacing:.05em;text-transform:uppercase}
+.fg input{background:var(--bg2);border:1px solid var(--border2);border-radius:6px;padding:8px 11px;font-family:'Lato',sans-serif;font-size:.87rem;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;width:100%}
+.fg input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.14)}
+.fg input::placeholder{color:var(--text3)}
+
+/* TEMPLATE GRID */
+.tg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.tt{border:2px solid var(--border2);border-radius:7px;cursor:pointer;overflow:hidden;position:relative;aspect-ratio:3/2;background:var(--bg2);transition:border-color .2s,transform .15s,box-shadow .15s}
+.tt:hover{transform:scale(1.04);box-shadow:var(--shadow)}
+.tt.active{border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,168,76,0.30)}
+.tt img{width:100%;height:100%;object-fit:cover;display:block}
+.tt .tl{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.7));color:#fff;font-size:.55rem;font-weight:700;padding:8px 3px 3px;text-align:center;letter-spacing:.03em}
+.tt .tp{position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.55);color:var(--gold2);font-size:.55rem;padding:1px 4px;border-radius:3px;font-weight:700}
+.tpl-hint{font-size:.7rem;color:var(--text3);margin-top:7px;text-align:center}
+
+/* DROPZONE */
+.dz{border:2px dashed var(--border);border-radius:var(--radius-sm);padding:22px 14px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;background:var(--bg2)}
+.dz:hover,.dz.drag{border-color:var(--gold);background:rgba(201,168,76,0.05)}
+.dz-ico{font-size:1.8rem;margin-bottom:7px}
+.dz-t{font-weight:700;font-size:.84rem;color:var(--text2);margin-bottom:2px}
+.dz-s{font-size:.72rem;color:var(--text3)}
+
+/* COUNTER */
+.cb{display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:9px 13px;margin-top:9px}
+.cb.hidden{display:none}
+.cb-l{display:flex;align-items:center;gap:7px}
+.cb-n{font-family:'Cinzel',serif;font-size:1.2rem;font-weight:700;color:var(--gold)}
+.cb-d{font-size:.74rem;color:var(--text2)}
+.cb-w{font-size:.68rem;color:#e07a50;font-weight:700}
+.btn-cf{background:none;border:1px solid var(--border);border-radius:5px;padding:4px 9px;font-size:.7rem;color:var(--text2);cursor:pointer;transition:background .15s}
+.btn-cf:hover{background:var(--border2)}
+
+/* SAMPLE & FORMAT */
+.sr{margin-top:9px}
+.btn-smp{background:none;border:1px solid var(--border);border-radius:5px;padding:6px 12px;font-size:.75rem;color:var(--gold3);cursor:pointer;font-family:'Lato',sans-serif;font-weight:700;transition:background .2s,border-color .2s;width:100%}
+[data-theme="dark"] .btn-smp{color:var(--gold2)}
+.btn-smp:hover{background:rgba(201,168,76,0.08);border-color:var(--gold)}
+.fmt{background:var(--bg2);border:1px solid var(--border2);border-radius:5px;padding:9px 11px;font-size:.72rem;color:var(--text2);margin-top:8px;line-height:1.65}
+.fmt code{background:var(--border2);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:.78rem;color:var(--gold3)}
+[data-theme="dark"] .fmt code{color:var(--gold2)}
+
+/* ACTION BTNS */
+.ab{display:flex;flex-direction:column;gap:9px}
+.btn-gen{width:100%;padding:13px;border:none;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;letter-spacing:.06em;cursor:pointer;position:relative;overflow:hidden;transition:transform .15s,box-shadow .2s;box-shadow:0 4px 16px rgba(26,53,96,0.35)}
+.btn-gen:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(26,53,96,0.45)}
+.btn-gen:active{transform:translateY(0)}
+.btn-gen .shine{position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);animation:shine 3s ease infinite}
+.btn-rst{width:100%;padding:9px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg2);color:var(--text2);font-family:'Lato',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
+.btn-rst:hover{background:var(--border2);color:var(--text)}
+
+/* ================================================================ PREVIEW COL */
+.pc{padding:22px;background:var(--bg2);min-height:calc(100vh - var(--hh))}
+.ps{position:sticky;top:calc(var(--hh) + 14px);display:flex;flex-direction:column;gap:13px}
+.ph{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.ph h2{font-family:'Cinzel',serif;font-size:.85rem;color:var(--text2);letter-spacing:.04em}
+.pnav{display:flex;align-items:center;gap:7px}
+.pnav.hidden{display:none}
+.nb{width:28px;height:28px;border-radius:50%;background:var(--surface);border:1px solid var(--border);cursor:pointer;font-size:.95rem;color:var(--text);display:flex;align-items:center;justify-content:center;transition:background .15s}
+.nb:hover{background:var(--border);border-color:var(--gold)}
+.nb:disabled{opacity:.35;cursor:default}
+.ni{font-size:.78rem;color:var(--text2);min-width:38px;text-align:center}
+
+/* PREVIEW AREA */
+.pa{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;min-height:280px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow2);position:relative}
+.es{text-align:center;padding:44px 22px;display:flex;flex-direction:column;align-items:center;gap:11px}
+.es.hidden{display:none}
+.es-ico{font-size:2.8rem;animation:float 3s ease-in-out infinite}
+.es h3{font-family:'Cinzel',serif;font-size:.95rem;color:var(--text2)}
+.es p{font-size:.78rem;color:var(--text3);max-width:220px;line-height:1.6}
+.es strong{color:var(--gold3)}
+[data-theme="dark"] .es strong{color:var(--gold2)}
+.cw{display:none;position:relative;width:100%}
+.cw.show{display:block}
+.cw canvas{width:100%;height:auto;display:block}
+.wm{position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,0.40);color:rgba(255,255,255,0.65);font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:2px 7px;border-radius:3px;pointer-events:none}
+
+/* EXPORT BTNS */
+.eb{display:none;flex-direction:column;gap:7px}
+.eb.show{display:flex}
+.btn-pdf{padding:11px;border:none;border-radius:var(--radius-sm);background:linear-gradient(135deg,#c0392b,#e05a40);color:#fff;font-family:'Lato',sans-serif;font-size:.84rem;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(192,57,43,0.35);transition:transform .15s,box-shadow .2s}
+.btn-pdf:hover{transform:translateY(-2px);box-shadow:0 5px 18px rgba(192,57,43,0.45)}
+.btn-zip{padding:11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text2);font-family:'Lato',sans-serif;font-size:.84rem;font-weight:700;cursor:pointer;transition:background .2s,border-color .2s}
+.btn-zip:hover{background:var(--border2);border-color:var(--gold)}
+
+/* ================================================================ ANIMATIONS */
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes shine{0%{left:-100%}100%{left:200%}}
+@keyframes tIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+@keyframes tOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(16px)}}
+
+/* ================================================================ RESPONSIVE */
+@media(max-width:780px){
+  .main{grid-template-columns:1fr}
+  .fc{border-right:none;border-bottom:1px solid var(--border2)}
+  .pc{padding:14px}
+  .ps{position:static}
+  .brand-sub{display:none}
+  .tg{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:420px){
+  .brand-name{font-size:.78rem}
+  .tg{grid-template-columns:repeat(3,1fr)}
+}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="ls" class="ls">
+  <div class="ls-rings">
+    <div class="ls-ring"></div><div class="ls-ring"></div><div class="ls-ring"></div>
+    <div class="ls-ico">🎓</div>
+  </div>
+  <div class="ls-title">Bantu Guru Yuk</div>
+  <div class="ls-sub">Generator Piagam Otomatis SD</div>
+  <div class="ls-bar-wrap"><div class="ls-bar" id="lsBar"></div></div>
+  <div class="ls-status" id="lsSt">Menyiapkan generator piagam...</div>
+</div>
+
+<!-- GENERATE OVERLAY -->
+<div id="go" class="go">
+  <div class="go-box">
+    <div class="go-rings">
+      <div class="go-ring"></div><div class="go-ring"></div><div class="go-ring"></div>
+      <div class="go-ico">⚡</div>
+    </div>
+    <div class="go-title" id="goTitle">Menyiapkan piagam...</div>
+    <div class="go-count" id="goCount">0 / 0 piagam selesai</div>
+    <div class="go-pw"><div class="go-p" id="goP"></div></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="tw" class="toast-wrap"></div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="brand">
+    <span class="brand-ico">🎓</span>
+    <div>
+      <span class="brand-name">Bantu Guru Yuk</span>
+      <span class="brand-sep">|</span>
+      <span class="brand-sub">Piagam Naik Kelas</span>
+    </div>
+  </div>
+  <div class="hdr-r">
+    <span class="free-badge">FREE</span>
+    <button class="theme-btn" id="tBtn">🌙</button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- LEFT: FORM -->
+  <aside class="fc">
+
+    <!-- Pilih Template -->
+    <div class="card">
+      <div class="ch"><span class="ch-ico">🖼️</span><h2>Pilih Template</h2></div>
+      <div class="tg" id="tg"></div>
+      <p class="tpl-hint">💡 Ganti file di folder <code style="font-size:.68rem;background:var(--border2);padding:1px 5px;border-radius:3px">/templates/</code> untuk template sendiri</p>
+    </div>
+
+    <!-- Data Sekolah -->
+    <div class="card">
+      <div class="ch"><span class="ch-ico">🏫</span><h2>Data Sekolah</h2></div>
+      <div class="fg"><label>Nama Sekolah</label><input id="f1" placeholder="SD Negeri 1 Bantu Guru"/></div>
+      <div class="fg"><label>Tahun Ajaran</label><input id="f2" placeholder="2024/2025"/></div>
+      <div class="fg"><label>Kepala Sekolah</label><input id="f3" placeholder="Drs. Budi Santoso, M.Pd."/></div>
+      <div class="fg"><label>Kota &amp; Tanggal</label><input id="f4" placeholder="Trenggalek, 14 Juni 2025"/></div>
+    </div>
+
+    <!-- Upload Excel -->
+    <div class="card">
+      <div class="ch"><span class="ch-ico">📊</span><h2>Data Siswa (Excel)</h2></div>
+      <div class="dz" id="dz">
+        <div class="dz-ico">📁</div>
+        <div class="dz-t">Drag &amp; drop file Excel di sini</div>
+        <div class="dz-s">atau klik untuk pilih file (.xlsx / .xls)</div>
+        <input type="file" id="fi" accept=".xlsx,.xls" style="display:none"/>
+      </div>
+      <div class="cb hidden" id="cb">
+        <div class="cb-l">
+          <span class="cb-n" id="cbN">0</span>
+          <div>
+            <div class="cb-d">Siswa berhasil dimuat</div>
+            <div class="cb-w hidden" id="cbW"></div>
+          </div>
+        </div>
+        <button class="btn-cf" id="btnCF">✕ Ganti File</button>
+      </div>
+      <div class="sr"><button class="btn-smp" id="btnSmp">⬇ Unduh Contoh Excel</button></div>
+      <div class="fmt">
+        <strong>Format kolom Excel:</strong><br/>
+        <code>Nama</code> &nbsp;|&nbsp; <code>Kategori</code><br/>
+        <small style="color:var(--text3)">Contoh: <em>Andi Pratama</em> | <em>Siswa Terbaik</em></small>
+      </div>
+    </div>
+
+    <!-- Action -->
+    <div class="ab">
+      <button class="btn-gen" id="btnGen"><span class="shine"></span>✨ Generate Piagam</button>
+      <button class="btn-rst" id="btnRst">🔄 Reset Semua</button>
+    </div>
+
+  </aside>
+
+  <!-- RIGHT: PREVIEW -->
+  <div class="pc">
+    <div class="ps">
+      <div class="ph">
+        <h2>👁 Preview Piagam</h2>
+        <div class="pnav hidden" id="pnav">
+          <button class="nb" id="nbP">‹</button>
+          <span class="ni" id="ni">1 / 1</span>
+          <button class="nb" id="nbN">›</button>
+        </div>
+      </div>
+      <div class="pa" id="pa">
+        <div class="es" id="es">
+          <div class="es-ico">📜</div>
+          <h3>Belum ada preview</h3>
+          <p>Isi data sekolah, upload Excel,<br/>lalu klik <strong>Generate Piagam</strong></p>
+        </div>
+        <div class="cw" id="cw">
+          <canvas id="cv"></canvas>
+          <div class="wm" id="wm">FREE VERSION</div>
+        </div>
+      </div>
+      <div class="eb" id="eb">
+        <button class="btn-pdf" id="btnPDF">📄 Export PDF — A4 Landscape (semua siswa)</button>
+        <button class="btn-zip" id="btnZIP">🗜 Export ZIP JPG (per siswa)</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+/* ================================================================
+   BANTU GURU YUK | PIAGAM NAIK KELAS — script
+
+   ╔══════════════════════════════════════════════════════════════╗
+   ║  CARA PAKAI TEMPLATE SENDIRI:                               ║
+   ║  1. Taruh file JPG/PNG di folder /templates/                ║
+   ║     Nama file: t1.jpg, t2.jpg, ... t7.jpg                  ║
+   ║  2. Ubah array TEMPLATES di bawah:                          ║
+   ║     - file  : path file (misal 'templates/t1.jpg')         ║
+   ║     - name  : nama tampil di thumbnail                      ║
+   ║     - free  : true = bisa dipakai FREE tier                 ║
+   ║     - pos   : posisi teks (RASIO 0.0 – 1.0 dari ukuran)    ║
+   ║       x = horizontal (0=kiri, 0.5=tengah, 1=kanan)         ║
+   ║       y = vertikal   (0=atas, 0.5=tengah, 1=bawah)         ║
+   ║     - style : ukuran & warna teks per elemen                ║
+   ║       size  = rasio dari tinggi canvas (0.03 = 3%)          ║
+   ╚══════════════════════════════════════════════════════════════╝
+================================================================ */
+
+/* ----------------------------------------------------------------
+   KONFIGURASI TEMPLATE
+   ---------------------------------------------------------------- */
+const TEMPLATES = [
+  {
+    id:1, file:'templates/t1.jpg', name:'Elegan Emas', free:true,
+    pos:{
+      judul:   {x:.50,y:.17}, subjudul:{x:.50,y:.27},
+      nama:    {x:.50,y:.43}, kategori:{x:.50,y:.56},
+      sekolah: {x:.50,y:.65}, tahun:   {x:.50,y:.71},
+      tanggal: {x:.68,y:.84}, kepala:  {x:.68,y:.93}
+    },
+    style:{
+      judul:   {color:'#7a4f0a',size:.050,bold:true},
+      subjudul:{color:'#5a3a18',size:.028,italic:true},
+      nama:    {color:'#1a3560',size:.068,bold:true},
+      kategori:{color:'#8a5f10',size:.034,italic:true},
+      sekolah: {color:'#333',  size:.026},
+      tahun:   {color:'#555',  size:.022},
+      tanggal: {color:'#444',  size:.022},
+      kepala:  {color:'#1a3560',size:.025,bold:true}
+    }
+  },
+  {
+    id:2, file:'templates/t2.jpg', name:'Biru Klasik', free:false,
+    pos:{
+      judul:   {x:.50,y:.18}, subjudul:{x:.50,y:.28},
+      nama:    {x:.50,y:.44}, kategori:{x:.50,y:.57},
+      sekolah: {x:.50,y:.66}, tahun:   {x:.50,y:.72},
+      tanggal: {x:.70,y:.84}, kepala:  {x:.70,y:.93}
+    },
+    style:{
+      judul:   {color:'#1a3560',size:.050,bold:true},
+      subjudul:{color:'#2d5fa8',size:.028,italic:true},
+      nama:    {color:'#0d2040',size:.068,bold:true},
+      kategori:{color:'#2d5fa8',size:.034,italic:true},
+      sekolah: {color:'#333',  size:.026},
+      tahun:   {color:'#555',  size:.022},
+      tanggal: {color:'#444',  size:.022},
+      kepala:  {color:'#1a3560',size:.025,bold:true}
+    }
+  },
+  {
+    id:3, file:'templates/t3.jpg', name:'Hijau Segar', free:false,
+    pos:{
+      judul:   {x:.50,y:.17}, subjudul:{x:.50,y:.27},
+      nama:    {x:.50,y:.43}, kategori:{x:.50,y:.55},
+      sekolah: {x:.50,y:.64}, tahun:   {x:.50,y:.70},
+      tanggal: {x:.67,y:.83}, kepala:  {x:.67,y:.92}
+    },
+    style:{
+      judul:   {color:'#1a4a20',size:.050,bold:true},
+      subjudul:{color:'#2d7a38',size:.028,italic:true},
+      nama:    {color:'#0d3010',size:.068,bold:true},
+      kategori:{color:'#2d7a38',size:.034,italic:true},
+      sekolah: {color:'#333',  size:.026},
+      tahun:   {color:'#555',  size:.022},
+      tanggal: {color:'#444',  size:.022},
+      kepala:  {color:'#1a4a20',size:.025,bold:true}
+    }
+  },
+  {
+    id:4, file:'templates/t4.jpg', name:'Merah Maroon', free:false,
+    pos:{
+      judul:   {x:.50,y:.17}, subjudul:{x:.50,y:.27},
+      nama:    {x:.50,y:.43}, kategori:{x:.50,y:.55},
+      sekolah: {x:.50,y:.64}, tahun:   {x:.50,y:.70},
+      tanggal: {x:.68,y:.83}, kepala:  {x:.68,y:.92}
+    },
+    style:{
+      judul:   {color:'#6a1010',size:.050,bold:true},
+      subjudul:{color:'#9a2020',size:.028,italic:true},
+      nama:    {color:'#3a0808',size:.068,bold:true},
+      kategori:{color:'#9a2020',size:.034,italic:true},
+      sekolah: {color:'#333',  size:.026},
+      tahun:   {color:'#555',  size:.022},
+      tanggal: {color:'#444',  size:.022},
+      kepala:  {color:'#6a1010',size:.025,bold:true}
+    }
+  },
+  {
+    id:5, file:'templates/t5.jpg', name:'Ungu Anggun', free:false,
+    pos:{
+      judul:   {x:.50,y:.17}, subjudul:{x:.50,y:.27},
+      nama:    {x:.50,y:.43}, kategori:{x:.50,y:.55},
+      sekolah: {x:.50,y:.64}, tahun:   {x:.50,y:.70},
+      tanggal: {x:.68,y:.83}, kepala:  {x:.68,y:.92}
+    },
+    style:{
+      judul:   {color:'#4a1a6a',size:.050,bold:true},
+      subjudul:{color:'#7a3a9a',size:.028,italic:true},
+      nama:    {color:'#2a0848',size:.068,bold:true},
+      kategori:{color:'#7a3a9a',size:.034,italic:true},
+      sekolah: {color:'#333',  size:.026},
+      tahun:   {color:'#555',  size:.022},
+      tanggal: {color:'#444',  size:.022},
+      kepala:  {color:'#4a1a6a',size:.025,bold:true}
+    }
+  },
+  {
+    id:6, file:'templates/t6.jpg', name:'Krem Mewah', free:false,
+    pos:{
+      judul:   {x:.50,y:.17}, subjudul:{x:.50,y:.27},
+      nama:    {x:.50,y:.43}, kategori:{x:.50,y:.55},
+      sekolah: {x:.50,y:.64}, tahun:   {x:.50,y:.70},
+      tanggal: {x:.68,y:.83}, kepala:  {x:.68,y:.92}
+    },
+    style:{
+      judul:   {color:'#5a4010',size:.050,bold:true},
+      subjudul:{color:'#8a6830',size:.028,italic:true},
+      nama:    {color:'#3a2808',size:.068,bold:true},
+      kategori:{color:'#8a6830',size:.034,italic:true},
+      sekolah: {color:'#333',  size:.026},
+      tahun:   {color:'#555',  size:.022},
+      tanggal: {color:'#444',  size:.022},
+      kepala:  {color:'#5a4010',size:.025,bold:true}
+    }
+  },
+  {
+    id:7, file:'templates/t7.jpg', name:'Tosca Modern', free:false,
+    pos:{
+      judul:   {x:.50,y:.17}, subjudul:{x:.50,y:.27},
+      nama:    {x:.50,y:.43}, kategori:{x:.50,y:.55},
+      sekolah: {x:.50,y:.64}, tahun:   {x:.50,y:.70},
+      tanggal: {x:.68,y:.83}, kepala:  {x:.68,y:.92}
+    },
+    style:{
+      judul:   {color:'#0a4a4a',size:.050,bold:true},
+      subjudul:{color:'#1a7a7a',size:.028,italic:true},
+      nama:    {color:'#082828',size:.068,bold:true},
+      kategori:{color:'#1a7a7a',size:.034,italic:true},
+      sekolah: {color:'#333',  size:.026},
+      tahun:   {color:'#555',  size:.022},
+      tanggal: {color:'#444',  size:.022},
+      kepala:  {color:'#0a4a4a',size:.025,bold:true}
+    }
+  }
+];
+
+/* ----------------------------------------------------------------
+   CONFIG
+   ---------------------------------------------------------------- */
+const FREE_MAX  = 10;   // maks siswa FREE
+const IS_PRO    = false; // ganti true jika PRO aktif
+// Ukuran canvas piagam: A4 landscape @150dpi
+const CW = 1754, CH = 1240;
+
+/* ----------------------------------------------------------------
+   STATE
+   ---------------------------------------------------------------- */
+let students   = [];
+let rendered   = []; // dataURL per siswa
+let curIdx     = 0;
+let selTpl     = 1;
+let imgCache   = {}; // cache HTMLImageElement per src
+
+/* ----------------------------------------------------------------
+   UTILS
+   ---------------------------------------------------------------- */
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function toast(msg, type='info', dur=3500) {
+  const w = document.getElementById('tw');
+  const icons = {success:'✅',error:'❌',info:'ℹ️'};
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  w.appendChild(el);
+  setTimeout(()=>{ el.classList.add('out'); setTimeout(()=>el.remove(),320); }, dur);
+}
+
+function loadImg(src) {
+  return new Promise((res, rej) => {
+    if (imgCache[src]) { res(imgCache[src]); return; }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload  = () => { imgCache[src] = img; res(img); };
+    img.onerror = () => rej(new Error('img not found: ' + src));
+    img.src = src;
+  });
+}
+
+/* ----------------------------------------------------------------
+   LOADING SCREEN
+   ---------------------------------------------------------------- */
+async function runLS() {
+  const bar = document.getElementById('lsBar');
+  const st  = document.getElementById('lsSt');
+  const steps = [
+    [15,'Menyiapkan generator piagam...'],
+    [35,'Memuat antarmuka...'],
+    [58,'Memuat template...'],
+    [78,'Menyiapkan library PDF...'],
+    [95,'Memeriksa komponen...'],
+    [100,'Siap! 🎉']
+  ];
+  for (const [p, t] of steps) {
+    bar.style.width = p + '%';
+    st.textContent  = t;
+    await sleep(p === 100 ? 250 : 320);
+  }
+  document.getElementById('ls').classList.add('out');
+  setTimeout(() => document.getElementById('ls').remove(), 700);
+}
+
+/* ----------------------------------------------------------------
+   TEMPLATE GRID
+   ---------------------------------------------------------------- */
+function buildTG() {
+  const grid = document.getElementById('tg');
+  grid.innerHTML = '';
+  const colors = ['#f5ebc8','#dceaff','#ebf5e6','#ffeaea','#f0e6ff','#fff5dc','#e1f5f5'];
+  TEMPLATES.forEach(tpl => {
+    const d = document.createElement('div');
+    d.className = 'tt' + (tpl.id === selTpl ? ' active' : '');
+    d.dataset.id = tpl.id;
+
+    const img = document.createElement('img');
+    img.src = tpl.file;
+    img.alt = tpl.name;
+    img.loading = 'lazy';
+    img.onerror = () => { img.style.display='none'; d.style.background = colors[(tpl.id-1)%7]; };
+
+    const lbl = document.createElement('div');
+    lbl.className = 'tl';
+    lbl.textContent = tpl.name;
+
+    d.appendChild(img);
+    d.appendChild(lbl);
+
+    if (!tpl.free && !IS_PRO) {
+      const lock = document.createElement('div');
+      lock.className = 'tp';
+      lock.textContent = 'PRO';
+      d.appendChild(lock);
+    }
+
+    d.addEventListener('click', () => pickTpl(tpl.id));
+    grid.appendChild(d);
+  });
+}
+
+function pickTpl(id) {
+  const tpl = TEMPLATES.find(t => t.id === id);
+  if (!tpl) return;
+  if (!tpl.free && !IS_PRO) { toast('Template ini khusus PRO 🔒', 'info'); return; }
+  selTpl = id;
+  document.querySelectorAll('.tt').forEach(el => el.classList.toggle('active', +el.dataset.id === id));
+  if (rendered.length) renderPrev(curIdx);
+}
+
+/* ----------------------------------------------------------------
+   EXCEL
+   ---------------------------------------------------------------- */
+function handleXLS(file) {
+  if (!file) return;
+  if (!/\.(xlsx|xls)$/i.test(file.name)) { toast('Format harus .xlsx atau .xls', 'error'); return; }
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const wb   = XLSX.read(e.target.result, {type:'binary'});
+      const ws   = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+      let start  = 0;
+      const hdr  = (rows[0]||[]).map(c=>String(c).toLowerCase());
+      if (hdr.includes('nama')||hdr.includes('name')) start = 1;
+      const parsed = [];
+      for (let i = start; i < rows.length; i++) {
+        const nm = String(rows[i][0]||'').trim();
+        const kt = String(rows[i][1]||'').trim();
+        if (nm) parsed.push({nama:nm, kategori:kt||'Siswa Berprestasi'});
+      }
+      if (!parsed.length) { toast('File kosong atau format tidak sesuai', 'error'); return; }
+      students = parsed;
+      updateCB();
+      toast(`${parsed.length} siswa berhasil dimuat! 🎉`, 'success');
+    } catch(err) { toast('Gagal membaca Excel: '+err.message,'error'); }
+  };
+  r.readAsBinaryString(file);
+}
+
+function updateCB() {
+  const cb = document.getElementById('cb');
+  cb.classList.remove('hidden');
+  document.getElementById('cbN').textContent = students.length;
+  const w = document.getElementById('cbW');
+  if (!IS_PRO && students.length > FREE_MAX) {
+    w.classList.remove('hidden');
+    w.textContent = `Hanya ${FREE_MAX} siswa pertama yang diproses (FREE)`;
+  } else { w.classList.add('hidden'); }
+}
+
+function downloadSample() {
+  const data = [
+    ['Nama','Kategori'],
+    ['Andi Firmansyah','Siswa Terbaik'],
+    ['Siti Nurhaliza','Siswa Terajin'],
+    ['Budi Santoso','Siswa Paling Kreatif'],
+    ['Dewi Rahayu','Siswa Paling Sopan'],
+    ['Rizky Pratama','Juara Olimpiade Matematika'],
+    ['Nina Agustina','Siswa Paling Aktif'],
+    ['Fajar Nugroho','Siswa Teladan'],
+  ];
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Data Siswa');
+  XLSX.writeFile(wb, 'contoh-data-siswa.xlsx');
+  toast('Contoh Excel berhasil diunduh!','success');
+}
+
+/* ----------------------------------------------------------------
+   OVERLAY
+   ---------------------------------------------------------------- */
+function showGO(show) { document.getElementById('go').classList.toggle('show', show); }
+function setGO(msg, done, total) {
+  document.getElementById('goTitle').textContent = msg;
+  document.getElementById('goCount').textContent = `${done} / ${total} piagam selesai`;
+  document.getElementById('goP').style.width = (total>0 ? Math.round(done/total*100) : 0) + '%';
+}
+
+/* ----------------------------------------------------------------
+   DRAW SATU PIAGAM
+   Semua posisi menggunakan rasio (0–1) dari CW x CH
+   ---------------------------------------------------------------- */
+function drawOne(bgImg, tpl, s, f1, f2, f3, f4) {
+  return new Promise(resolve => {
+    const canvas = document.createElement('canvas');
+    canvas.width = CW; canvas.height = CH;
+    const ctx = canvas.getContext('2d');
+
+    // 1. Background
+    if (bgImg) {
+      ctx.drawImage(bgImg, 0, 0, CW, CH);
+    } else {
+      drawFallback(ctx, tpl);
+    }
+
+    const pos = tpl.pos, sty = tpl.style;
+
+    // 2. Teks helper
+    function putText(key, text) {
+      if (!pos[key]) return;
+      const s = sty[key] || {};
+      const sz    = Math.round((s.size||.03) * CH);
+      const bold  = s.bold   ? 'bold'   : 'normal';
+      const ital  = s.italic ? 'italic' : 'normal';
+      ctx.fillStyle   = s.color || '#222';
+      ctx.textAlign   = 'center';
+      ctx.textBaseline = 'middle';
+
+      // Auto-fit: kurangi font sampai muat dalam 72% lebar
+      let fs = sz;
+      ctx.font = `${ital} ${bold} ${fs}px 'Playfair Display',serif`;
+      const maxW = CW * .72;
+      while (ctx.measureText(text).width > maxW && fs > 14) {
+        fs--;
+        ctx.font = `${ital} ${bold} ${fs}px 'Playfair Display',serif`;
+      }
+      ctx.fillText(text, pos[key].x * CW, pos[key].y * CH);
+    }
+
+    putText('judul',    'PIAGAM PENGHARGAAN');
+    putText('subjudul', 'Diberikan Kepada');
+    putText('nama',     s.nama);
+    putText('kategori', s.kategori);
+    putText('sekolah',  f1);
+    putText('tahun',    'Tahun Ajaran ' + f2);
+    putText('tanggal',  f4);
+    putText('kepala',   f3);
+
+    // 3. Watermark
+    if (!IS_PRO) {
+      ctx.save();
+      ctx.globalAlpha = .10;
+      ctx.fillStyle   = '#888';
+      ctx.font        = `bold ${Math.round(CH*.065)}px 'Lato',sans-serif`;
+      ctx.textAlign   = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.translate(CW/2, CH/2);
+      ctx.rotate(-Math.PI/8);
+      ctx.fillText('FREE VERSION — bantuguruyuk.web.id', 0, 0);
+      ctx.restore();
+    }
+
+    resolve(canvas.toDataURL('image/jpeg', .94));
+  });
+}
+
+/* Fallback latar kalau file gambar belum ada */
+function drawFallback(ctx, tpl) {
+  const pals = [
+    ['#fdf8ef','#e8c870','#9a7228'],
+    ['#edf4ff','#aacef0','#2d5fa8'],
+    ['#edfbf0','#90d8a0','#2d8a40'],
+    ['#fff0f0','#f0a0a0','#9a2020'],
+    ['#f5edff','#c898f8','#6a30a0'],
+    ['#fffaed','#f0d890','#8a6830'],
+    ['#e8faf8','#80d8d0','#1a7a70'],
+  ];
+  const [bg, mid, acc] = pals[(tpl.id-1)%7];
+  const g = ctx.createLinearGradient(0,0,CW,CH);
+  g.addColorStop(0, bg); g.addColorStop(.5, mid+'66'); g.addColorStop(1, bg);
+  ctx.fillStyle = g; ctx.fillRect(0,0,CW,CH);
+  ctx.strokeStyle = acc; ctx.lineWidth = 16; ctx.strokeRect(32,32,CW-64,CH-64);
+  ctx.strokeStyle = acc+'88'; ctx.lineWidth = 4; ctx.strokeRect(54,54,CW-108,CH-108);
+  [[90,90],[CW-90,90],[90,CH-90],[CW-90,CH-90]].forEach(([cx,cy])=>{
+    ctx.fillStyle=acc; ctx.beginPath(); ctx.arc(cx,cy,14,0,Math.PI*2); ctx.fill();
+  });
+  ctx.fillStyle=acc+'55'; ctx.fillRect(90,120,CW-180,6); ctx.fillRect(90,CH-126,CW-180,6);
+}
+
+/* ----------------------------------------------------------------
+   GENERATE
+   ---------------------------------------------------------------- */
+async function generate() {
+  const f1 = document.getElementById('f1').value.trim();
+  const f2 = document.getElementById('f2').value.trim();
+  const f3 = document.getElementById('f3').value.trim();
+  const f4 = document.getElementById('f4').value.trim();
+  if (!f1||!f2||!f3||!f4) { toast('Lengkapi data sekolah dulu!','error'); return; }
+  if (!students.length)   { toast('Upload Excel data siswa dulu!','error'); return; }
+
+  const tpl  = TEMPLATES.find(t => t.id === selTpl);
+  const list = (!IS_PRO && students.length > FREE_MAX) ? students.slice(0,FREE_MAX) : students;
+
+  showGO(true);
+  try {
+    setGO('Memuat template gambar...', 0, list.length);
+    let bgImg = null;
+    try { bgImg = await loadImg(tpl.file); } catch { bgImg = null; }
+
+    rendered = [];
+    const msgs = ['Menyiapkan piagam...','Menulis nama siswa...','Menyusun halaman...','Menambahkan hiasan...','Hampir selesai...'];
+    for (let i = 0; i < list.length; i++) {
+      setGO(msgs[Math.min(Math.floor(i/list.length*msgs.length), msgs.length-1)], i, list.length);
+      await sleep(25);
+      rendered.push(await drawOne(bgImg, tpl, list[i], f1, f2, f3, f4));
+    }
+    setGO('Selesai! ✨', list.length, list.length);
+    await sleep(450);
+    showGO(false);
+    curIdx = 0;
+    showPreview();
+    toast(`${list.length} piagam berhasil dibuat! 🎉`, 'success');
+  } catch(err) {
+    showGO(false);
+    toast('Gagal: '+err.message, 'error');
+    console.error(err);
+  }
+}
+
+/* ----------------------------------------------------------------
+   PREVIEW
+   ---------------------------------------------------------------- */
+function showPreview() {
+  document.getElementById('es').classList.add('hidden');
+  document.getElementById('cw').classList.add('show');
+  document.getElementById('eb').classList.add('show');
+  const nav = document.getElementById('pnav');
+  rendered.length > 1 ? nav.classList.remove('hidden') : nav.classList.add('hidden');
+  renderPrev(curIdx);
+}
+
+function renderPrev(idx) {
+  if (!rendered[idx]) return;
+  curIdx = idx;
+  updateNI();
+  const cv  = document.getElementById('cv');
+  const img = new Image();
+  img.onload = () => {
+    cv.width = img.width; cv.height = img.height;
+    cv.getContext('2d').drawImage(img, 0, 0);
+  };
+  img.src = rendered[idx];
+}
+
+function updateNI() {
+  document.getElementById('ni').textContent = `${curIdx+1} / ${rendered.length}`;
+  document.getElementById('nbP').disabled = curIdx === 0;
+  document.getElementById('nbN').disabled = curIdx === rendered.length-1;
+}
+
+/* ----------------------------------------------------------------
+   EXPORT PDF
+   ---------------------------------------------------------------- */
+async function exportPDF() {
+  if (!rendered.length) { toast('Generate piagam dulu!','error'); return; }
+  showGO(true);
+  try {
+    const {jsPDF} = window.jspdf;
+    const pdf = new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+    for (let i = 0; i < rendered.length; i++) {
+      setGO('Menyusun PDF...', i+1, rendered.length);
+      await sleep(15);
+      if (i>0) pdf.addPage();
+      pdf.addImage(rendered[i],'JPEG',0,0,297,210);
+    }
+    pdf.save(`piagam-naik-kelas-${document.getElementById('f1').value.trim()||'BGY'}.pdf`);
+    toast('PDF berhasil diunduh! 📄','success');
+  } catch(err) { toast('Gagal PDF: '+err.message,'error'); }
+  finally { showGO(false); }
+}
+
+/* ----------------------------------------------------------------
+   EXPORT ZIP
+   ---------------------------------------------------------------- */
+async function exportZIP() {
+  if (!rendered.length) { toast('Generate piagam dulu!','error'); return; }
+  showGO(true);
+  try {
+    const zip    = new JSZip();
+    const folder = zip.folder('piagam-naik-kelas');
+    const list   = (!IS_PRO && students.length > FREE_MAX) ? students.slice(0,FREE_MAX) : students;
+    for (let i = 0; i < rendered.length; i++) {
+      setGO('Mengemas file...', i+1, rendered.length);
+      await sleep(15);
+      const b64  = rendered[i].split(',')[1];
+      const safe = list[i].nama.replace(/[^a-zA-Z0-9 ]/g,'').replace(/\s+/g,'-');
+      folder.file(`${String(i+1).padStart(3,'0')}-${safe}.jpg`, b64, {base64:true});
+    }
+    const blob = await zip.generateAsync({type:'blob'});
+    const a    = Object.assign(document.createElement('a'), {href:URL.createObjectURL(blob), download:'piagam-naik-kelas.zip'});
+    a.click(); URL.revokeObjectURL(a.href);
+    toast(`${rendered.length} piagam dikemas dalam ZIP! 🗜`,'success');
+  } catch(err) { toast('Gagal ZIP: '+err.message,'error'); }
+  finally { showGO(false); }
+}
+
+/* ----------------------------------------------------------------
+   RESET
+   ---------------------------------------------------------------- */
+function resetAll() {
+  students=[]; rendered=[]; curIdx=0;
+  ['f1','f2','f3','f4'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fi').value='';
+  document.getElementById('cb').classList.add('hidden');
+  document.getElementById('es').classList.remove('hidden');
+  document.getElementById('cw').classList.remove('show');
+  document.getElementById('eb').classList.remove('show');
+  document.getElementById('pnav').classList.add('hidden');
+  toast('Semua data direset 🔄','info');
+}
+
+/* ----------------------------------------------------------------
+   TEMA
+   ---------------------------------------------------------------- */
+function toggleTheme() {
+  const d = document.documentElement;
+  const dark = d.dataset.theme==='dark';
+  d.dataset.theme = dark ? 'light' : 'dark';
+  document.getElementById('tBtn').textContent = dark ? '🌙' : '☀️';
+  localStorage.setItem('bgy-piagam-theme', d.dataset.theme);
+}
+function loadTheme() {
+  const s = localStorage.getItem('bgy-piagam-theme');
+  if (s==='dark') { document.documentElement.dataset.theme='dark'; document.getElementById('tBtn').textContent='☀️'; }
+}
+
+/* ----------------------------------------------------------------
+   EVENTS
+   ---------------------------------------------------------------- */
+function initEvents() {
+  document.getElementById('tBtn').onclick = toggleTheme;
+
+  // Dropzone
+  const dz = document.getElementById('dz');
+  const fi = document.getElementById('fi');
+  dz.onclick = () => fi.click();
+  fi.onchange = e => handleXLS(e.target.files[0]);
+  dz.ondragover = e => { e.preventDefault(); dz.classList.add('drag'); };
+  dz.ondragleave = () => dz.classList.remove('drag');
+  dz.ondrop = e => { e.preventDefault(); dz.classList.remove('drag'); handleXLS(e.dataTransfer.files[0]); };
+
+  document.getElementById('btnCF').onclick = () => {
+    students=[]; rendered=[];
+    fi.value='';
+    document.getElementById('cb').classList.add('hidden');
+    document.getElementById('es').classList.remove('hidden');
+    document.getElementById('cw').classList.remove('show');
+    document.getElementById('eb').classList.remove('show');
+    document.getElementById('pnav').classList.add('hidden');
+  };
+
+  document.getElementById('btnSmp').onclick  = downloadSample;
+  document.getElementById('btnGen').onclick  = generate;
+  document.getElementById('btnRst').onclick  = resetAll;
+  document.getElementById('nbP').onclick     = () => curIdx>0 && renderPrev(curIdx-1);
+  document.getElementById('nbN').onclick     = () => curIdx<rendered.length-1 && renderPrev(curIdx+1);
+  document.getElementById('btnPDF').onclick  = exportPDF;
+  document.getElementById('btnZIP').onclick  = exportZIP;
+
+  document.onkeydown = e => {
+    if (!rendered.length) return;
+    if (e.key==='ArrowLeft'  && curIdx>0)               renderPrev(curIdx-1);
+    if (e.key==='ArrowRight' && curIdx<rendered.length-1) renderPrev(curIdx+1);
+  };
+}
+
+/* ----------------------------------------------------------------
+   INIT
+   ---------------------------------------------------------------- */
+(function init() {
+  loadTheme();
+  buildTG();
+  initEvents();
+  runLS();
+})();
+</script>
+</body>
+</html>
