@@ -28,7 +28,7 @@ body.dark{
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);min-height:100vh;color:var(--text);transition:background .3s,color .3s;display:flex;flex-direction:column}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#0ea5a055;border-radius:99px}
 
-/* ===================== LOADING ===================== */
+/* ===== LOADING ===== */
 #loadingScreen{position:fixed;top:0;left:0;width:100%;height:100%;background:#0d2b3e;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#fff;z-index:99999;transition:opacity .5s,visibility .5s}
 #loadingScreen.out{opacity:0;visibility:hidden;pointer-events:none}
 #loadingScreen::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#0ea5a0,#0d7a8a,#2d6a7f);opacity:.88}
@@ -39,17 +39,22 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);min-height
 #loadingScreen .ls-status{font-size:.75rem;margin-top:10px;position:relative;z-index:1;color:rgba(255,255,255,.65);min-height:16px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ===================== GEN OVERLAY ===================== */
-#genOverlay{position:fixed;inset:0;z-index:8888;background:rgba(8,20,40,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+/* ===== GEN OVERLAY (kaya BGY katrol nilai) ===== */
+#genOverlay{position:fixed;inset:0;z-index:8888;background:rgba(8,20,40,.88);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
 #genOverlay.show{opacity:1;visibility:visible}
-.go-box{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:36px 44px;text-align:center;box-shadow:var(--shadow-lg);min-width:260px}
-.go-spinner{width:52px;height:52px;border:4px solid rgba(14,165,160,.2);border-top-color:#0ea5a0;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 18px}
-.go-title{font-size:.95rem;font-weight:800;color:var(--blue);margin-bottom:5px}
-.go-count{font-size:.8rem;color:var(--text-light);margin-bottom:13px}
-.go-pw{width:100%;height:5px;background:var(--border);border-radius:99px;overflow:hidden}
-.go-p{height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .25s ease}
+.go-box{background:var(--card-bg);border:1px solid var(--border);border-radius:18px;padding:36px 48px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35);min-width:300px;max-width:380px;width:90%}
+.go-logo{width:54px;height:54px;border-radius:14px;margin:0 auto 14px;display:block}
+.go-ico-fallback{font-size:2.4rem;margin-bottom:14px}
+.go-spinner{width:56px;height:56px;border:4px solid rgba(14,165,160,.18);border-top-color:#0ea5a0;border-right-color:#0d7a8a;border-radius:50%;animation:spin .75s linear infinite;margin:0 auto 18px}
+.go-title{font-size:1rem;font-weight:800;color:var(--blue);margin-bottom:4px;letter-spacing:.01em}
+.go-sub{font-size:.78rem;color:var(--text-light);margin-bottom:4px}
+.go-count{font-size:.75rem;color:var(--text-light);margin-bottom:14px;min-height:18px}
+.go-pw{width:100%;height:7px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:8px}
+.go-p{height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .3s ease}
+.go-pct{font-size:.72rem;color:var(--text-light);font-weight:700}
+.go-tips{font-size:.7rem;color:var(--text-light);margin-top:12px;opacity:.7;font-style:italic}
 
-/* ===================== TOAST ===================== */
+/* ===== TOAST ===== */
 .toast-wrap{position:fixed;bottom:18px;right:18px;z-index:9000;display:flex;flex-direction:column;gap:7px;pointer-events:none}
 .toast{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:10px 15px;font-size:.8rem;color:var(--text);box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:8px;pointer-events:auto;animation:tIn .3s ease;max-width:290px}
 .toast.out{animation:tOut .3s ease forwards}
@@ -57,18 +62,16 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);min-height
 @keyframes tIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:translateX(0)}}
 @keyframes tOut{from{opacity:1}to{opacity:0;transform:translateX(14px)}}
 
-/* ===================== POPUP MANUAL ===================== */
+/* ===== POPUP MANUAL ===== */
 #popupOverlay{position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;padding:16px}
 #popupOverlay.show{opacity:1;visibility:visible}
-.popup-box{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow-lg);width:100%;max-width:420px;max-height:85vh;display:flex;flex-direction:column;border:1px solid var(--border)}
+.popup-box{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow-lg);width:100%;max-width:430px;max-height:85vh;display:flex;flex-direction:column;border:1px solid var(--border)}
 .popup-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)}
-.popup-head h3{font-size:.92rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:6px}
+.popup-head h3{font-size:.92rem;font-weight:800;color:var(--text)}
 .popup-close{width:28px;height:28px;border-radius:50%;border:none;background:var(--border);color:var(--text-light);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background .15s}
 .popup-close:hover{background:var(--text-light);color:#fff}
 .popup-body{padding:16px 18px;overflow-y:auto;flex:1}
 .popup-foot{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:8px}
-
-/* Daftar siswa di popup */
 .siswa-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;max-height:220px;overflow-y:auto}
 .siswa-item{display:flex;align-items:center;gap:6px;background:var(--input-bg);border:1px solid var(--border);border-radius:8px;padding:7px 10px}
 .siswa-item-nama{flex:1;font-size:.82rem;font-weight:700;color:var(--text)}
@@ -81,7 +84,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);min-height
 .siswa-form input::placeholder{color:var(--text-light)}
 .siswa-empty{text-align:center;padding:20px;color:var(--text-light);font-size:.8rem;opacity:.6}
 
-/* ===================== HEADER ===================== */
+/* ===== HEADER ===== */
 header{position:sticky;top:0;z-index:300;background:var(--grad);padding:0 16px;box-shadow:0 2px 10px rgba(0,0,0,.18)}
 body.dark header{background:linear-gradient(135deg,#0d4a47,#1a3a4a)}
 .header-inner{display:flex;align-items:center;justify-content:space-between;height:60px}
@@ -92,7 +95,6 @@ body.dark header{background:linear-gradient(135deg,#0d4a47,#1a3a4a)}
 .hdr-btn{height:32px;min-width:32px;border-radius:8px;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;cursor:pointer;font-size:.9rem;transition:background .2s;display:flex;align-items:center;justify-content:center;padding:0 8px;gap:4px;font-weight:700}
 .hdr-btn:hover{background:rgba(255,255,255,.22)}
 .badge-free{display:inline-block;background:#64748b;color:#fff;font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:99px;margin-left:5px;vertical-align:middle}
-/* 3-dot dropdown */
 #menuOverlay{display:none;position:fixed;inset:0;z-index:250}
 #menuOverlay.open{display:block}
 .dropdown-menu{position:absolute;top:calc(100% + 8px);right:0;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);min-width:175px;overflow:hidden;display:none;z-index:400}
@@ -101,35 +103,35 @@ body.dark header{background:linear-gradient(135deg,#0d4a47,#1a3a4a)}
 .dropdown-item:hover{background:var(--input-bg)}
 .dropdown-divider{height:1px;background:var(--border);margin:3px 0}
 
-/* ===================== MAIN ===================== */
-main{max-width:1200px;margin:0 auto;padding:20px;width:100%;flex:1}
+/* ===== MAIN ===== */
+main{max-width:1280px;margin:0 auto;padding:20px;width:100%;flex:1}
 @media(max-width:640px){main{padding:10px}}
-.two-col{display:grid;grid-template-columns:370px 1fr;gap:16px;align-items:start}
-@media(max-width:900px){.two-col{grid-template-columns:1fr}}
+.two-col{display:grid;grid-template-columns:380px 1fr;gap:16px;align-items:start}
+@media(max-width:960px){.two-col{grid-template-columns:1fr}}
 .col-left{display:flex;flex-direction:column;gap:12px}
 .col-right{position:sticky;top:78px}
 
-/* ===================== CARD ===================== */
+/* ===== CARD ===== */
 .card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid var(--border)}
 .card-title{font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--border);padding-bottom:8px}
 
-/* ===================== FORM ===================== */
+/* ===== FORM ===== */
 .form-group{margin-bottom:10px}
 label{display:block;font-size:.69rem;font-weight:700;color:var(--text-light);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px}
 input[type=text]{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:.83rem;color:var(--text);background:var(--input-bg);transition:border-color .2s;outline:none;font-family:inherit}
 input[type=text]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(14,165,160,.12)}
 input[type=text]::placeholder{color:var(--text-light)}
 
-/* ===================== TEMPLATE GRID ===================== */
-.tpl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:0}
+/* ===== TEMPLATE GRID ===== */
+.tpl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
 .tpl-thumb{border:2px solid var(--border);border-radius:8px;cursor:pointer;overflow:hidden;position:relative;aspect-ratio:3/2;background:var(--input-bg);transition:border-color .2s,transform .15s,box-shadow .15s}
 .tpl-thumb:hover{transform:scale(1.04);box-shadow:var(--shadow)}
 .tpl-thumb.active{border-color:var(--blue);box-shadow:0 0 0 2px rgba(14,165,160,.25)}
 .tpl-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.tpl-thumb .tl{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;font-size:.55rem;font-weight:700;padding:8px 3px 3px;text-align:center}
-.tpl-thumb .tp{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.55);color:#fbbf24;font-size:.55rem;padding:1px 4px;border-radius:3px;font-weight:700}
+.tpl-thumb .tl{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.72));color:#fff;font-size:.52rem;font-weight:700;padding:8px 3px 3px;text-align:center}
+.tpl-thumb .tp{position:absolute;top:3px;right:3px;background:rgba(180,130,0,.85);color:#ffe;font-size:.5rem;padding:1px 4px;border-radius:3px;font-weight:700;display:flex;align-items:center;gap:2px}
 
-/* ===================== DROPZONE ===================== */
+/* ===== DROPZONE ===== */
 .dz{border:2px dashed var(--border);border-radius:10px;padding:20px 14px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;background:var(--input-bg)}
 .dz:hover,.dz.drag{border-color:var(--blue);background:rgba(14,165,160,.05)}
 .dz-ico{font-size:1.8rem;margin-bottom:6px}
@@ -143,20 +145,16 @@ input[type=text]::placeholder{color:var(--text-light)}
 .cb-warn{font-size:.68rem;color:#ef4444;font-weight:700}
 .btn-cf{border:1.5px solid var(--border);border-radius:7px;padding:4px 9px;font-size:.7rem;color:var(--text-light);cursor:pointer;background:none;transition:background .15s;font-family:inherit}
 .btn-cf:hover{background:var(--border)}
-
-/* Row tombol di bawah dropzone */
 .upload-row{display:flex;gap:7px;margin-top:8px}
 .btn-smp{flex:1;padding:7px;border:1.5px solid var(--blue);border-radius:8px;font-size:.75rem;color:var(--blue);cursor:pointer;background:none;font-family:inherit;font-weight:700;transition:background .2s}
 body.dark .btn-smp{color:#5eead4;border-color:#5eead4}
 .btn-smp:hover{background:rgba(14,165,160,.07)}
 .btn-manual{flex:1;padding:7px;border:1.5px solid var(--blue);border-radius:8px;font-size:.75rem;color:#fff;cursor:pointer;background:var(--blue);font-family:inherit;font-weight:700;transition:opacity .2s}
 .btn-manual:hover{opacity:.88}
-
 .fmt-box{background:var(--input-bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:.73rem;color:var(--text-light);margin-top:8px;line-height:1.65}
 .fmt-box code{background:var(--border);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:.78rem;color:var(--blue)}
-body.dark .fmt-box code{color:#5eead4}
 
-/* ===================== ACTION BUTTONS ===================== */
+/* ===== BUTTONS ===== */
 .btn-primary{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:12px;border:none;border-radius:10px;background:var(--grad);color:#fff;font-size:.92rem;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(14,165,160,.3);transition:transform .15s,box-shadow .2s;font-family:inherit}
 .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(14,165,160,.4)}
 .btn-primary:active{transform:translateY(0)}
@@ -169,7 +167,7 @@ body.dark .fmt-box code{color:#5eead4}
 .btn-ok{flex:1;padding:9px;border:none;border-radius:8px;background:var(--grad);color:#fff;font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s}
 .btn-ok:hover{opacity:.88}
 
-/* ===================== EXPORT ===================== */
+/* ===== EXPORT ===== */
 .export-row{display:none;flex-direction:column;gap:7px;margin-top:0}
 .export-row.show{display:flex}
 .btn-pdf{display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;border:none;border-radius:9px;background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;font-size:.84rem;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(220,38,38,.3);transition:transform .15s;font-family:inherit}
@@ -177,44 +175,105 @@ body.dark .fmt-box code{color:#5eead4}
 .btn-zip{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:1.5px solid var(--border);border-radius:9px;background:none;color:var(--text-light);font-size:.83rem;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s,border-color .2s}
 .btn-zip:hover{background:var(--input-bg);border-color:var(--blue);color:var(--blue)}
 
-/* ===================== PREVIEW ===================== */
+/* ===== PREVIEW ===== */
 .preview-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.preview-head h2{font-size:.82rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:5px;margin-bottom:0;border:none;padding:0}
 .pnav{display:flex;align-items:center;gap:6px}
 .pnav.hidden{display:none}
 .nb{width:26px;height:26px;border-radius:50%;background:var(--input-bg);border:1.5px solid var(--border);cursor:pointer;font-size:.9rem;color:var(--text);display:flex;align-items:center;justify-content:center;transition:border-color .15s}
 .nb:hover{border-color:var(--blue)}
 .nb:disabled{opacity:.35;cursor:default}
 .ni{font-size:.77rem;color:var(--text-light);min-width:36px;text-align:center}
-.preview-area{background:var(--input-bg);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;min-height:260px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
-.es{text-align:center;padding:40px 20px;display:flex;flex-direction:column;align-items:center;gap:10px}
+
+/* Preview area: A4 landscape ratio 297:210 = ~1.414:1 */
+.preview-area{
+  background:var(--input-bg);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  position:relative;
+  width:100%;
+  aspect-ratio:297/210;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:10px;
+}
+.es{text-align:center;padding:40px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;position:absolute;inset:0;justify-content:center}
 .es.hidden{display:none}
 .es-ico{font-size:2.6rem;animation:float 3s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .es h3{font-size:.92rem;font-weight:700;color:var(--text-light)}
 .es p{font-size:.78rem;color:var(--text-light);opacity:.8;max-width:210px;line-height:1.6}
 .es strong{color:var(--blue)}
-.canvas-wrap{display:none;width:100%;position:relative}
-.canvas-wrap.show{display:block}
-.canvas-wrap canvas{width:100%;height:auto;display:block}
-.wm-badge{position:absolute;bottom:7px;right:9px;background:rgba(0,0,0,.38);color:rgba(255,255,255,.6);font-size:.58rem;font-weight:700;letter-spacing:.1em;padding:2px 7px;border-radius:3px;pointer-events:none}
 
-/* ===================== HINT BAR ===================== */
+/* Canvas mengisi penuh area preview */
+.canvas-wrap{display:none;position:absolute;inset:0}
+.canvas-wrap.show{display:block}
+.canvas-wrap canvas{width:100%;height:100%;display:block;object-fit:contain}
+
+/* Watermark teks PREVIEW miring transparan */
+.preview-wm-text{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+  z-index:5;
+}
+.preview-wm-text span{
+  font-size:5vw;
+  font-weight:900;
+  color:rgba(80,80,80,.13);
+  letter-spacing:.15em;
+  transform:rotate(-25deg);
+  text-transform:uppercase;
+  font-style:italic;
+  white-space:nowrap;
+  user-select:none;
+}
+
+/* Mahkota PRO di pojok kanan atas preview */
+.pro-crown{
+  position:absolute;top:8px;right:8px;
+  background:linear-gradient(135deg,#f59e0b,#d97706);
+  color:#fff;font-size:.65rem;font-weight:800;
+  padding:3px 8px;border-radius:6px;
+  display:none;align-items:center;gap:3px;
+  z-index:10;box-shadow:0 2px 8px rgba(217,119,6,.4);
+  pointer-events:none;
+}
+.pro-crown.show{display:flex}
+
+/* FREE VERSION badge kecil */
+.wm-badge{position:absolute;bottom:7px;right:9px;background:rgba(0,0,0,.38);color:rgba(255,255,255,.65);font-size:.55rem;font-weight:700;letter-spacing:.1em;padding:2px 7px;border-radius:3px;pointer-events:none;z-index:10}
+
+/* ===== HINT BAR ===== */
 .hint-bar{background:rgba(14,165,160,.07);border:1.5px solid rgba(14,165,160,.22);border-radius:10px;padding:10px 13px;margin-bottom:14px;font-size:.75rem;color:var(--text);line-height:1.8}
 .hint-bar span{font-weight:700;color:var(--blue-dark)}
 body.dark .hint-bar span{color:#5eead4}
 
-/* ===================== FOOTER ===================== */
+/* ===== FOOTER ===== */
 footer{background:var(--grad);color:#fff;text-align:center;padding:14px 20px 12px;margin-top:auto}
 footer .footer-title{font-size:.88rem;font-weight:800;margin-bottom:4px}
 footer .footer-sub{font-size:.72rem;color:rgba(255,255,255,.82)}
 footer a{color:#fff;text-decoration:underline;font-weight:600}
 
-/* ===================== RESPONSIVE ===================== */
+/* ===== PRO BLOCK OVERLAY di preview ===== */
+.pro-block-overlay{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(2px);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  z-index:20;border-radius:var(--radius);
+  gap:6px;
+}
+.pro-block-overlay.show{display:flex}
+.pro-block-overlay .pb-icon{font-size:2rem}
+.pro-block-overlay .pb-title{font-size:.9rem;font-weight:800;color:#fff}
+.pro-block-overlay .pb-sub{font-size:.74rem;color:rgba(255,255,255,.75);text-align:center;max-width:200px;line-height:1.5}
+.pro-block-overlay .pb-btn{margin-top:6px;padding:8px 20px;background:linear-gradient(135deg,#f59e0b,#d97706);border:none;border-radius:8px;color:#fff;font-weight:800;font-size:.8rem;cursor:pointer;font-family:inherit}
+
 @media(max-width:640px){
   .tpl-grid{grid-template-columns:repeat(4,1fr)}
   .header-brand-text h1{font-size:.85rem}
   .col-right{position:static}
+  .preview-wm-text span{font-size:8vw}
 }
 @media(max-width:380px){.tpl-grid{grid-template-columns:repeat(3,1fr)}}
 .hidden{display:none!important}
@@ -235,10 +294,15 @@ footer a{color:#fff;text-decoration:underline;font-weight:600}
 <!-- ===== GENERATE OVERLAY ===== -->
 <div id="genOverlay">
   <div class="go-box">
+    <img src="../guru-cibisd2.png" alt="Logo" class="go-logo" onerror="this.style.display='none';document.getElementById('goIcoFb').style.display='block'"/>
+    <div id="goIcoFb" class="go-ico-fallback" style="display:none">🎓</div>
     <div class="go-spinner"></div>
     <div class="go-title" id="goTitle">Menyiapkan piagam...</div>
+    <div class="go-sub" id="goSub">Mohon tunggu sebentar</div>
     <div class="go-count" id="goCount">0 / 0 piagam selesai</div>
     <div class="go-pw"><div class="go-p" id="goP"></div></div>
+    <div class="go-pct" id="goPct">0%</div>
+    <div class="go-tips" id="goTips">Sedang memproses data siswa...</div>
   </div>
 </div>
 
@@ -250,14 +314,11 @@ footer a{color:#fff;text-decoration:underline;font-weight:600}
       <button class="popup-close" id="popupClose">✕</button>
     </div>
     <div class="popup-body">
-      <!-- Form tambah siswa -->
       <div class="siswa-form">
         <input type="text" id="inpNama" placeholder="Nama siswa..." maxlength="60"/>
-        <input type="text" id="inpKat"  placeholder="Prestasi / Kategori..." maxlength="60"/>
+        <input type="text" id="inpKat"  placeholder="Prestasi / Kategori..." maxlength="80"/>
       </div>
       <button class="btn-add" id="btnAddSiswa">➕ Tambah Siswa</button>
-
-      <!-- Daftar siswa -->
       <div style="margin-top:14px;margin-bottom:6px;font-size:.72rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px">Daftar Siswa (<span id="popupCount">0</span>)</div>
       <div class="siswa-list" id="siswaList">
         <div class="siswa-empty" id="siswaEmpty">Belum ada siswa ditambahkan</div>
@@ -274,32 +335,18 @@ footer a{color:#fff;text-decoration:underline;font-weight:600}
 <div id="kontakOverlay" style="position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;padding:16px">
   <div style="background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow-lg);width:100%;max-width:380px;border:1px solid var(--border);overflow:hidden">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)">
-      <div style="font-size:.92rem;font-weight:800;color:var(--text)">&#128236; Kontak &amp; Saran</div>
-      <button onclick="closeKontak()" style="width:28px;height:28px;border-radius:50%;border:none;background:var(--border);color:var(--text-light);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center">&#10005;</button>
+      <div style="font-size:.92rem;font-weight:800;color:var(--text)">📨 Kontak &amp; Saran</div>
+      <button onclick="closeKontak()" style="width:28px;height:28px;border-radius:50%;border:none;background:var(--border);color:var(--text-light);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center">✕</button>
     </div>
     <div style="padding:18px">
-      <p style="font-size:.8rem;color:var(--text-light);line-height:1.7;margin-bottom:16px">
-        Ada kritik, saran, atau pertanyaan seputar aplikasi ini?<br/>
-        Langsung hubungi <strong style="color:var(--blue)">Pak Choyy</strong> melalui:
-      </p>
-      <a href="https://www.tiktok.com/@pak.choyy" target="_blank" rel="noopener"
-         style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);margin-bottom:10px;transition:border-color .2s;background:var(--input-bg)"
-         onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
-        <span style="font-size:1.5rem">&#127925;</span>
-        <div>
-          <div style="font-size:.84rem;font-weight:800">TikTok @pak.choyy</div>
-          <div style="font-size:.72rem;color:var(--text-light)">Komentar atau DM di TikTok</div>
-        </div>
+      <p style="font-size:.8rem;color:var(--text-light);line-height:1.7;margin-bottom:16px">Ada kritik, saran, atau pertanyaan? Hubungi <strong style="color:var(--blue)">Pak Choyy</strong> melalui:</p>
+      <a href="https://www.tiktok.com/@pak.choyy" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);margin-bottom:10px;background:var(--input-bg)" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+        <span style="font-size:1.5rem">🎵</span>
+        <div><div style="font-size:.84rem;font-weight:800">TikTok @pak.choyy</div><div style="font-size:.72rem;color:var(--text-light)">Komentar atau DM di TikTok</div></div>
       </a>
-      <a href="https://wa.me/6285XXXXXXXXX?text=Halo%20Pak%20Choyy%2C%20saya%20mau%20memberi%20saran%20tentang%20Generator%20Piagam%20BGY%3A%20" target="_blank" rel="noopener"
-         id="waLink"
-         style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);transition:border-color .2s;background:var(--input-bg)"
-         onmouseover="this.style.borderColor='#22c55e'" onmouseout="this.style.borderColor='var(--border)'">
-        <span style="font-size:1.5rem">&#128241;</span>
-        <div>
-          <div style="font-size:.84rem;font-weight:800">WhatsApp Pak Choyy</div>
-          <div style="font-size:.72rem;color:var(--text-light)">Chat langsung via WA</div>
-        </div>
+      <a href="https://wa.me/6285XXXXXXXXX?text=Halo+Pak+Choyy" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);background:var(--input-bg)" onmouseover="this.style.borderColor='#22c55e'" onmouseout="this.style.borderColor='var(--border)'">
+        <span style="font-size:1.5rem">📱</span>
+        <div><div style="font-size:.84rem;font-weight:800">WhatsApp Pak Choyy</div><div style="font-size:.72rem;color:var(--text-light)">Chat langsung via WA</div></div>
       </a>
     </div>
   </div>
@@ -314,7 +361,7 @@ footer a{color:#fff;text-decoration:underline;font-weight:600}
     <div class="header-brand">
       <img src="../guru-cibisd2.png" alt="Logo" onerror="this.style.display='none'"/>
       <div class="header-brand-text">
-        <h1>Bantu Guru Yuk | Piagam Naik Kelas <span id="hBadge" class="badge-free">FREE</span></h1>
+        <h1>Bantu Guru Yuk | Piagam Naik Kelas <span class="badge-free">FREE</span></h1>
       </div>
     </div>
     <div class="header-right">
@@ -322,11 +369,11 @@ footer a{color:#fff;text-decoration:underline;font-weight:600}
       <button class="hdr-btn" id="menuBtn" onclick="toggleMenu()" title="Menu">⋮</button>
       <div id="menuOverlay" onclick="closeMenu()"></div>
       <div class="dropdown-menu" id="dropdownMenu">
-        <button class="dropdown-item" onclick="closeMenu();window.open('https://bantuguruyuk.web.id','_blank')">&#127760; Web Utama BGY</button>
-        <button class="dropdown-item" onclick="closeMenu();showKontak()">&#128236; Kontak &amp; Saran</button>
+        <button class="dropdown-item" onclick="closeMenu();window.open('https://bantuguruyuk.web.id','_blank')">🌐 Web Utama BGY</button>
+        <button class="dropdown-item" onclick="closeMenu();showKontak()">📨 Kontak &amp; Saran</button>
         <div class="dropdown-divider"></div>
-        <button class="dropdown-item" onclick="closeMenu();showAbout()">&#8505;&#65039; Tentang Aplikasi</button>
-        <button class="dropdown-item" onclick="closeMenu();resetAll()">&#128260; Reset Semua</button>
+        <button class="dropdown-item" onclick="closeMenu();showAbout()">ℹ️ Tentang Aplikasi</button>
+        <button class="dropdown-item" onclick="closeMenu();resetAll()">🔄 Reset Semua</button>
       </div>
     </div>
   </div>
@@ -339,7 +386,6 @@ footer a{color:#fff;text-decoration:underline;font-weight:600}
   </div>
 
   <div class="two-col">
-
     <!-- ====== KIRI ====== -->
     <div class="col-left">
 
@@ -354,23 +400,27 @@ footer a{color:#fff;text-decoration:underline;font-weight:600}
         <div class="card-title">🏫 Data Sekolah</div>
         <div class="form-group">
           <label>Nama Sekolah</label>
-          <input type="text" id="f1" placeholder="SD Negeri 1 Bantu Guru" oninput="onFormChange()"/>
+          <input type="text" id="f1" placeholder="SD Kenyang MBG" oninput="onFormChange()"/>
         </div>
         <div class="form-group">
           <label>Tahun Ajaran</label>
-          <input type="text" id="f2" placeholder="2024/2025" oninput="onFormChange()"/>
+          <input type="text" id="f2" oninput="onFormChange()"/>
         </div>
         <div class="form-group">
           <label>Kepala Sekolah</label>
           <input type="text" id="f3" placeholder="Drs. Budi Santoso, M.Pd." oninput="onFormChange()"/>
         </div>
         <div class="form-group">
+          <label>Wali Kelas</label>
+          <input type="text" id="f5" placeholder="Siti Rahayu, S.Pd." oninput="onFormChange()"/>
+        </div>
+        <div class="form-group">
           <label>Kota &amp; Tanggal</label>
-          <input type="text" id="f4" placeholder="Trenggalek, 14 Juni 2025" oninput="onFormChange()"/>
+          <input type="text" id="f4" placeholder="Magetan, 19 Juni 2026" oninput="onFormChange()"/>
         </div>
       </div>
 
-      <!-- Upload / Manual -->
+      <!-- Data Siswa -->
       <div class="card">
         <div class="card-title">📊 Data Siswa</div>
         <div class="dz" id="dz">
@@ -419,14 +469,35 @@ footer a{color:#fff;text-decoration:underline;font-weight:600}
         </div>
 
         <div class="preview-area" id="pa">
+          <!-- Empty state -->
           <div class="es" id="es">
             <div class="es-ico">📜</div>
             <h3>Belum ada preview</h3>
             <p>Pilih template, isi data sekolah,<br/>lalu klik <strong>Generate Piagam</strong></p>
           </div>
+
+          <!-- Canvas -->
           <div class="canvas-wrap" id="cw">
             <canvas id="cv"></canvas>
-            <div class="wm-badge" id="wmBadge">FREE VERSION</div>
+          </div>
+
+          <!-- Watermark PREVIEW miring transparan -->
+          <div class="preview-wm-text" id="wmText" style="display:none">
+            <span>PREVIEW</span>
+          </div>
+
+          <!-- Mahkota PRO -->
+          <div class="pro-crown" id="proCrown">👑 PRO</div>
+
+          <!-- FREE badge -->
+          <div class="wm-badge" id="wmBadge" style="display:none">FREE VERSION — bantuguruyuk.web.id</div>
+
+          <!-- PRO block overlay (muncul saat klik generate template PRO) -->
+          <div class="pro-block-overlay" id="proBlock">
+            <div class="pb-icon">👑</div>
+            <div class="pb-title">Template PRO</div>
+            <div class="pb-sub">Template ini khusus pengguna PRO. Preview tersedia, tapi generate &amp; download dinonaktifkan.</div>
+            <button class="pb-btn" onclick="closeProBlock()">Oke, Mengerti</button>
           </div>
         </div>
 
@@ -440,190 +511,231 @@ footer a{color:#fff;text-decoration:underline;font-weight:600}
   </div>
 </main>
 
-<!-- ===== FOOTER ===== -->
 <footer>
   <div class="footer-title">🎓 Generator Piagam Naik Kelas SD</div>
   <div class="footer-sub">
     &copy; 2026 Bantu Guru Yuk by
     <a href="https://www.tiktok.com/@pak.choyy" target="_blank" rel="noopener">@pak.choyy</a>
-    &bull; v26.5.6
+    &bull; v26.5.16
   </div>
 </footer>
 
 <script>
 /* ================================================================
-   BANTU GURU YUK | PIAGAM NAIK KELAS — v26.5.6
+   BANTU GURU YUK | PIAGAM NAIK KELAS — v26.5.16
    ================================================================
 
-   CARA GANTI TEMPLATE:
-   1. Desain di Canva → Export JPG landscape (A4)
+   CARA GANTI / TAMBAH TEMPLATE:
+   1. Desain di Canva → Export JPG landscape (A4, 1754x1240px @150dpi)
    2. Taruh di /templates/ → t1.jpg, t2.jpg, dst.
    3. Edit array TEMPLATES di bawah:
       pos  : posisi teks (rasio 0.0–1.0 dari ukuran canvas)
              x:0.5 = tengah | y:0.44 = 44% dari atas
       style: size = % tinggi canvas | color = warna hex
+
+   FIELD TERSEDIA:
+   judul, subjudul, nama, kategori, sekolah, tahun,
+   tanggal, kepala, walikelas
 ================================================================ */
 
-/* ----------------------------------------------------------------
-   KONFIGURASI TEMPLATE
-   ---------------------------------------------------------------- */
 const TEMPLATES = [
   {
     id:1, file:'templates/t1.jpg', name:'Elegan Emas', free:true,
     pos:{
-      judul:   {x:.50,y:.17}, subjudul:{x:.50,y:.27},
-      nama:    {x:.50,y:.43}, kategori:{x:.50,y:.56},
-      sekolah: {x:.50,y:.65}, tahun:   {x:.50,y:.71},
-      tanggal: {x:.68,y:.84}, kepala:  {x:.68,y:.93}
+      judul:    {x:.50,y:.17}, subjudul: {x:.50,y:.27},
+      nama:     {x:.50,y:.43}, kategori: {x:.50,y:.56},
+      sekolah:  {x:.50,y:.65}, tahun:    {x:.50,y:.71},
+      tanggal:  {x:.68,y:.84}, kepala:   {x:.68,y:.91},
+      walikelas:{x:.32,y:.91}
     },
     style:{
-      judul:   {color:'#7a4f0a',size:.050,bold:true},
-      subjudul:{color:'#5a3a18',size:.028,italic:true},
-      nama:    {color:'#1a3560',size:.068,bold:true},
-      kategori:{color:'#8a5f10',size:.034,italic:true},
-      sekolah: {color:'#444',  size:.026},
-      tahun:   {color:'#666',  size:.022},
-      tanggal: {color:'#555',  size:.022},
-      kepala:  {color:'#1a3560',size:.025,bold:true}
+      judul:    {color:'#7a4f0a',size:.050,bold:true},
+      subjudul: {color:'#5a3a18',size:.028,italic:true},
+      nama:     {color:'#1a3560',size:.068,bold:true},
+      kategori: {color:'#8a5f10',size:.034,italic:true},
+      sekolah:  {color:'#444',  size:.026},
+      tahun:    {color:'#666',  size:.022},
+      tanggal:  {color:'#555',  size:.022},
+      kepala:   {color:'#1a3560',size:.025,bold:true},
+      walikelas:{color:'#1a3560',size:.025,bold:true}
     }
   },
   {
     id:2, file:'templates/t2.jpg', name:'Biru Klasik', free:false,
     pos:{
-      judul:   {x:.50,y:.18}, subjudul:{x:.50,y:.28},
-      nama:    {x:.50,y:.44}, kategori:{x:.50,y:.57},
-      sekolah: {x:.50,y:.66}, tahun:   {x:.50,y:.72},
-      tanggal: {x:.70,y:.84}, kepala:  {x:.70,y:.93}
+      judul:    {x:.50,y:.18}, subjudul: {x:.50,y:.28},
+      nama:     {x:.50,y:.44}, kategori: {x:.50,y:.57},
+      sekolah:  {x:.50,y:.66}, tahun:    {x:.50,y:.72},
+      tanggal:  {x:.70,y:.84}, kepala:   {x:.70,y:.92},
+      walikelas:{x:.30,y:.92}
     },
     style:{
-      judul:   {color:'#1a3560',size:.050,bold:true},
-      subjudul:{color:'#2d5fa8',size:.028,italic:true},
-      nama:    {color:'#0d2040',size:.068,bold:true},
-      kategori:{color:'#2d5fa8',size:.034,italic:true},
-      sekolah: {color:'#444',  size:.026},
-      tahun:   {color:'#666',  size:.022},
-      tanggal: {color:'#555',  size:.022},
-      kepala:  {color:'#1a3560',size:.025,bold:true}
+      judul:    {color:'#1a3560',size:.050,bold:true},
+      subjudul: {color:'#2d5fa8',size:.028,italic:true},
+      nama:     {color:'#0d2040',size:.068,bold:true},
+      kategori: {color:'#2d5fa8',size:.034,italic:true},
+      sekolah:  {color:'#444',  size:.026},
+      tahun:    {color:'#666',  size:.022},
+      tanggal:  {color:'#555',  size:.022},
+      kepala:   {color:'#1a3560',size:.025,bold:true},
+      walikelas:{color:'#1a3560',size:.025,bold:true}
     }
   },
   {
     id:3, file:'templates/t3.jpg', name:'Hijau Segar', free:false,
     pos:{
-      judul:   {x:.50,y:.17}, subjudul:{x:.50,y:.27},
-      nama:    {x:.50,y:.43}, kategori:{x:.50,y:.55},
-      sekolah: {x:.50,y:.64}, tahun:   {x:.50,y:.70},
-      tanggal: {x:.67,y:.83}, kepala:  {x:.67,y:.92}
+      judul:    {x:.50,y:.17}, subjudul: {x:.50,y:.27},
+      nama:     {x:.50,y:.43}, kategori: {x:.50,y:.55},
+      sekolah:  {x:.50,y:.64}, tahun:    {x:.50,y:.70},
+      tanggal:  {x:.67,y:.83}, kepala:   {x:.67,y:.92},
+      walikelas:{x:.33,y:.92}
     },
     style:{
-      judul:   {color:'#1a4a20',size:.050,bold:true},
-      subjudul:{color:'#2d7a38',size:.028,italic:true},
-      nama:    {color:'#0d3010',size:.068,bold:true},
-      kategori:{color:'#2d7a38',size:.034,italic:true},
-      sekolah: {color:'#444',  size:.026},
-      tahun:   {color:'#666',  size:.022},
-      tanggal: {color:'#555',  size:.022},
-      kepala:  {color:'#1a4a20',size:.025,bold:true}
+      judul:    {color:'#1a4a20',size:.050,bold:true},
+      subjudul: {color:'#2d7a38',size:.028,italic:true},
+      nama:     {color:'#0d3010',size:.068,bold:true},
+      kategori: {color:'#2d7a38',size:.034,italic:true},
+      sekolah:  {color:'#444',  size:.026},
+      tahun:    {color:'#666',  size:.022},
+      tanggal:  {color:'#555',  size:.022},
+      kepala:   {color:'#1a4a20',size:.025,bold:true},
+      walikelas:{color:'#1a4a20',size:.025,bold:true}
     }
   },
   {
     id:4, file:'templates/t4.jpg', name:'Merah Maroon', free:false,
     pos:{
-      judul:   {x:.50,y:.17}, subjudul:{x:.50,y:.27},
-      nama:    {x:.50,y:.43}, kategori:{x:.50,y:.55},
-      sekolah: {x:.50,y:.64}, tahun:   {x:.50,y:.70},
-      tanggal: {x:.68,y:.83}, kepala:  {x:.68,y:.92}
+      judul:    {x:.50,y:.17}, subjudul: {x:.50,y:.27},
+      nama:     {x:.50,y:.43}, kategori: {x:.50,y:.55},
+      sekolah:  {x:.50,y:.64}, tahun:    {x:.50,y:.70},
+      tanggal:  {x:.68,y:.83}, kepala:   {x:.68,y:.92},
+      walikelas:{x:.32,y:.92}
     },
     style:{
-      judul:   {color:'#6a1010',size:.050,bold:true},
-      subjudul:{color:'#9a2020',size:.028,italic:true},
-      nama:    {color:'#3a0808',size:.068,bold:true},
-      kategori:{color:'#9a2020',size:.034,italic:true},
-      sekolah: {color:'#444',  size:.026},
-      tahun:   {color:'#666',  size:.022},
-      tanggal: {color:'#555',  size:.022},
-      kepala:  {color:'#6a1010',size:.025,bold:true}
+      judul:    {color:'#6a1010',size:.050,bold:true},
+      subjudul: {color:'#9a2020',size:.028,italic:true},
+      nama:     {color:'#3a0808',size:.068,bold:true},
+      kategori: {color:'#9a2020',size:.034,italic:true},
+      sekolah:  {color:'#444',  size:.026},
+      tahun:    {color:'#666',  size:.022},
+      tanggal:  {color:'#555',  size:.022},
+      kepala:   {color:'#6a1010',size:.025,bold:true},
+      walikelas:{color:'#6a1010',size:.025,bold:true}
     }
   },
   {
     id:5, file:'templates/t5.jpg', name:'Ungu Anggun', free:false,
     pos:{
-      judul:   {x:.50,y:.17}, subjudul:{x:.50,y:.27},
-      nama:    {x:.50,y:.43}, kategori:{x:.50,y:.55},
-      sekolah: {x:.50,y:.64}, tahun:   {x:.50,y:.70},
-      tanggal: {x:.68,y:.83}, kepala:  {x:.68,y:.92}
+      judul:    {x:.50,y:.17}, subjudul: {x:.50,y:.27},
+      nama:     {x:.50,y:.43}, kategori: {x:.50,y:.55},
+      sekolah:  {x:.50,y:.64}, tahun:    {x:.50,y:.70},
+      tanggal:  {x:.68,y:.83}, kepala:   {x:.68,y:.92},
+      walikelas:{x:.32,y:.92}
     },
     style:{
-      judul:   {color:'#4a1a6a',size:.050,bold:true},
-      subjudul:{color:'#7a3a9a',size:.028,italic:true},
-      nama:    {color:'#2a0848',size:.068,bold:true},
-      kategori:{color:'#7a3a9a',size:.034,italic:true},
-      sekolah: {color:'#444',  size:.026},
-      tahun:   {color:'#666',  size:.022},
-      tanggal: {color:'#555',  size:.022},
-      kepala:  {color:'#4a1a6a',size:.025,bold:true}
+      judul:    {color:'#4a1a6a',size:.050,bold:true},
+      subjudul: {color:'#7a3a9a',size:.028,italic:true},
+      nama:     {color:'#2a0848',size:.068,bold:true},
+      kategori: {color:'#7a3a9a',size:.034,italic:true},
+      sekolah:  {color:'#444',  size:.026},
+      tahun:    {color:'#666',  size:.022},
+      tanggal:  {color:'#555',  size:.022},
+      kepala:   {color:'#4a1a6a',size:.025,bold:true},
+      walikelas:{color:'#4a1a6a',size:.025,bold:true}
     }
   },
   {
     id:6, file:'templates/t6.jpg', name:'Krem Mewah', free:false,
     pos:{
-      judul:   {x:.50,y:.17}, subjudul:{x:.50,y:.27},
-      nama:    {x:.50,y:.43}, kategori:{x:.50,y:.55},
-      sekolah: {x:.50,y:.64}, tahun:   {x:.50,y:.70},
-      tanggal: {x:.68,y:.83}, kepala:  {x:.68,y:.92}
+      judul:    {x:.50,y:.17}, subjudul: {x:.50,y:.27},
+      nama:     {x:.50,y:.43}, kategori: {x:.50,y:.55},
+      sekolah:  {x:.50,y:.64}, tahun:    {x:.50,y:.70},
+      tanggal:  {x:.68,y:.83}, kepala:   {x:.68,y:.92},
+      walikelas:{x:.32,y:.92}
     },
     style:{
-      judul:   {color:'#5a4010',size:.050,bold:true},
-      subjudul:{color:'#8a6830',size:.028,italic:true},
-      nama:    {color:'#3a2808',size:.068,bold:true},
-      kategori:{color:'#8a6830',size:.034,italic:true},
-      sekolah: {color:'#444',  size:.026},
-      tahun:   {color:'#666',  size:.022},
-      tanggal: {color:'#555',  size:.022},
-      kepala:  {color:'#5a4010',size:.025,bold:true}
+      judul:    {color:'#5a4010',size:.050,bold:true},
+      subjudul: {color:'#8a6830',size:.028,italic:true},
+      nama:     {color:'#3a2808',size:.068,bold:true},
+      kategori: {color:'#8a6830',size:.034,italic:true},
+      sekolah:  {color:'#444',  size:.026},
+      tahun:    {color:'#666',  size:.022},
+      tanggal:  {color:'#555',  size:.022},
+      kepala:   {color:'#5a4010',size:.025,bold:true},
+      walikelas:{color:'#5a4010',size:.025,bold:true}
     }
   },
   {
     id:7, file:'templates/t7.jpg', name:'Tosca Modern', free:false,
     pos:{
-      judul:   {x:.50,y:.17}, subjudul:{x:.50,y:.27},
-      nama:    {x:.50,y:.43}, kategori:{x:.50,y:.55},
-      sekolah: {x:.50,y:.64}, tahun:   {x:.50,y:.70},
-      tanggal: {x:.68,y:.83}, kepala:  {x:.68,y:.92}
+      judul:    {x:.50,y:.17}, subjudul: {x:.50,y:.27},
+      nama:     {x:.50,y:.43}, kategori: {x:.50,y:.55},
+      sekolah:  {x:.50,y:.64}, tahun:    {x:.50,y:.70},
+      tanggal:  {x:.68,y:.83}, kepala:   {x:.68,y:.92},
+      walikelas:{x:.32,y:.92}
     },
     style:{
-      judul:   {color:'#0a4a4a',size:.050,bold:true},
-      subjudul:{color:'#1a7a7a',size:.028,italic:true},
-      nama:    {color:'#082828',size:.068,bold:true},
-      kategori:{color:'#1a7a7a',size:.034,italic:true},
-      sekolah: {color:'#444',  size:.026},
-      tahun:   {color:'#666',  size:.022},
-      tanggal: {color:'#555',  size:.022},
-      kepala:  {color:'#0a4a4a',size:.025,bold:true}
+      judul:    {color:'#0a4a4a',size:.050,bold:true},
+      subjudul: {color:'#1a7a7a',size:.028,italic:true},
+      nama:     {color:'#082828',size:.068,bold:true},
+      kategori: {color:'#1a7a7a',size:.034,italic:true},
+      sekolah:  {color:'#444',  size:.026},
+      tahun:    {color:'#666',  size:.022},
+      tanggal:  {color:'#555',  size:.022},
+      kepala:   {color:'#0a4a4a',size:.025,bold:true},
+      walikelas:{color:'#0a4a4a',size:.025,bold:true}
+    }
+  },
+  {
+    id:8, file:'templates/t8.jpg', name:'Navy Premium', free:false,
+    pos:{
+      judul:    {x:.50,y:.17}, subjudul: {x:.50,y:.27},
+      nama:     {x:.50,y:.43}, kategori: {x:.50,y:.55},
+      sekolah:  {x:.50,y:.64}, tahun:    {x:.50,y:.70},
+      tanggal:  {x:.68,y:.83}, kepala:   {x:.68,y:.92},
+      walikelas:{x:.32,y:.92}
+    },
+    style:{
+      judul:    {color:'#0d1f4a',size:.050,bold:true},
+      subjudul: {color:'#1e3a7a',size:.028,italic:true},
+      nama:     {color:'#060e28',size:.068,bold:true},
+      kategori: {color:'#1e3a7a',size:.034,italic:true},
+      sekolah:  {color:'#333',  size:.026},
+      tahun:    {color:'#555',  size:.022},
+      tanggal:  {color:'#444',  size:.022},
+      kepala:   {color:'#0d1f4a',size:.025,bold:true},
+      walikelas:{color:'#0d1f4a',size:.025,bold:true}
     }
   }
 ];
 
-/* ----------------------------------------------------------------
-   CONFIG & STATE
-   ---------------------------------------------------------------- */
+/* ---------------------------------------------------------------- */
 const FREE_MAX = 10;
 const IS_PRO   = false;
 const CW = 1754, CH = 1240; // A4 landscape @150dpi
 
-let students   = [];   // data siswa aktif
-let manualTemp = [];   // data sementara di popup
-let rendered   = [];   // dataURL hasil generate
-let curIdx     = 0;
-let selTpl     = 1;
-let imgCache   = {};
-let previewLive= false; // apakah preview sedang menampilkan live 1-siswa
+let students    = [];
+let manualTemp  = [];
+let rendered    = [];
+let curIdx      = 0;
+let selTpl      = 1;
+let imgCache    = {};
+let previewLive = false;
+let isProTpl    = false; // apakah template yg dipilih adalah PRO
 
-/* ----------------------------------------------------------------
-   UTILS
-   ---------------------------------------------------------------- */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const $ = id => document.getElementById(id);
 
+/* ===== INIT TAHUN AJARAN OTOMATIS ===== */
+function initTahunAjaran() {
+  const now  = new Date();
+  const m    = now.getMonth(); // 0-based, Juli=6
+  const y    = now.getFullYear();
+  const ta   = m >= 6 ? `${y}/${y+1}` : `${y-1}/${y}`;
+  $('f2').value = ta;
+}
+
+/* ===== TOAST ===== */
 function toast(msg, type='info', dur=3500) {
   const icons = {success:'✅',error:'❌',info:'ℹ️'};
   const el = document.createElement('div');
@@ -633,6 +745,7 @@ function toast(msg, type='info', dur=3500) {
   setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 320); }, dur);
 }
 
+/* ===== IMAGE LOADER ===== */
 function loadImg(src) {
   return new Promise((res, rej) => {
     if (imgCache[src]) { res(imgCache[src]); return; }
@@ -644,9 +757,7 @@ function loadImg(src) {
   });
 }
 
-/* ----------------------------------------------------------------
-   DARK MODE
-   ---------------------------------------------------------------- */
+/* ===== DARK MODE ===== */
 function toggleDark() {
   const d = document.body.classList.toggle('dark');
   $('darkBtn').textContent = d ? '☀️' : '🌙';
@@ -659,12 +770,9 @@ function loadDark() {
   }
 }
 
-/* ----------------------------------------------------------------
-   DROPDOWN MENU (titik 3)
-   ---------------------------------------------------------------- */
+/* ===== DROPDOWN MENU ===== */
 function toggleMenu() {
-  const dm = $('dropdownMenu');
-  const mo = $('menuOverlay');
+  const dm = $('dropdownMenu'), mo = $('menuOverlay');
   const open = dm.classList.toggle('open');
   mo.classList.toggle('open', open);
 }
@@ -672,56 +780,60 @@ function closeMenu() {
   $('dropdownMenu').classList.remove('open');
   $('menuOverlay').classList.remove('open');
 }
-
 function showKontak() {
-  const o = document.getElementById('kontakOverlay');
+  const o = $('kontakOverlay');
   o.style.opacity='1'; o.style.visibility='visible';
   o.onclick = e => { if(e.target===o) closeKontak(); };
 }
 function closeKontak() {
-  const o = document.getElementById('kontakOverlay');
+  const o = $('kontakOverlay');
   o.style.opacity='0'; o.style.visibility='hidden';
 }
-
 function showAbout() {
-  toast('Bantu Guru Yuk | Piagam Naik Kelas v26.5.6 — by @pak.choyy', 'info', 5000);
+  toast('Bantu Guru Yuk | Piagam Naik Kelas v26.5.16 — by @pak.choyy', 'info', 5000);
 }
 
-/* ----------------------------------------------------------------
-   LOADING SCREEN
-   ---------------------------------------------------------------- */
+/* ===== LOADING SCREEN ===== */
 async function runLS() {
-  const steps = [350,'Memuat antarmuka...', 350,'Memuat template...', 300,'Menyiapkan library...', 250,'Siap! 🎉'];
+  const steps = [
+    300,'Memuat antarmuka...',
+    300,'Memuat template...',
+    250,'Menyiapkan library...',
+    200,'Siap! 🎉'
+  ];
   const st = $('lsSt');
   for (let i = 0; i < steps.length; i += 2) {
     await sleep(steps[i]); st.textContent = steps[i+1];
   }
-  await sleep(200);
+  await sleep(180);
   $('loadingScreen').classList.add('out');
   setTimeout(() => $('loadingScreen').remove(), 600);
 }
 
-/* ----------------------------------------------------------------
-   TEMPLATE GRID
-   ---------------------------------------------------------------- */
+/* ===== TEMPLATE GRID ===== */
 function buildTG() {
   const grid = $('tplGrid');
-  const fc   = ['#fdf8ef','#edf4ff','#edfbf0','#fff0f0','#f5edff','#fffaed','#e8faf8'];
+  const fc = ['#fdf8ef','#edf4ff','#edfbf0','#fff0f0','#f5edff','#fffaed','#e8faf8','#edf2ff'];
   TEMPLATES.forEach(tpl => {
     const d = document.createElement('div');
     d.className = 'tpl-thumb' + (tpl.id === selTpl ? ' active' : '');
     d.dataset.id = tpl.id;
+
     const img = document.createElement('img');
     img.src = tpl.file; img.alt = tpl.name; img.loading = 'lazy';
-    img.onerror = () => { img.style.display='none'; d.style.background = fc[(tpl.id-1)%7]; };
+    img.onerror = () => { img.style.display='none'; d.style.background = fc[(tpl.id-1)%8]; };
+
     const lbl = document.createElement('div');
     lbl.className = 'tl'; lbl.textContent = tpl.name;
+
     d.append(img, lbl);
-    if (!tpl.free && !IS_PRO) {
+
+    if (!tpl.free) {
       const lock = document.createElement('div');
-      lock.className = 'tp'; lock.textContent = 'PRO';
+      lock.className = 'tp'; lock.innerHTML = '👑 PRO';
       d.appendChild(lock);
     }
+
     d.addEventListener('click', () => pickTpl(tpl.id));
     grid.appendChild(d);
   });
@@ -730,65 +842,125 @@ function buildTG() {
 function pickTpl(id) {
   const tpl = TEMPLATES.find(t => t.id === id);
   if (!tpl) return;
-  if (!tpl.free && !IS_PRO) { toast('Template ini khusus pengguna PRO 🔒', 'info'); return; }
-  selTpl = id;
-  document.querySelectorAll('.tpl-thumb').forEach(el => el.classList.toggle('active', +el.dataset.id === id));
-  // Live preview: pakai manualTemp jika popup sedang terbuka, else students
+
+  selTpl  = id;
+  isProTpl = !tpl.free && !IS_PRO;
+
+  document.querySelectorAll('.tpl-thumb').forEach(el =>
+    el.classList.toggle('active', +el.dataset.id === id)
+  );
+
+  // Update mahkota di preview
+  $('proCrown').classList.toggle('show', !tpl.free);
+
+  // Sembunyikan pro-block jika diganti template lain
+  $('proBlock').classList.remove('show');
+
+  // Preview langsung muncul (apapun templatenya, termasuk PRO)
   const popupOpen = $('popupOverlay').classList.contains('show');
   const src = popupOpen ? manualTemp : students;
   if (src.length > 0) {
-    tryLivePreview(src);
-  } else if (rendered.length > 0) {
-    renderPrev(curIdx);
+    tryLivePreview(src, true);
+  } else {
+    // Preview dummy (tanpa siswa) — tampilkan template kosong
+    tryLivePreviewEmpty(tpl);
   }
 }
 
-/* ----------------------------------------------------------------
-   LIVE PREVIEW — tampilkan 1 siswa saja saat pilih template / ubah form
-   ---------------------------------------------------------------- */
-async function tryLivePreview(overrideStudents) {
+/* ===== PREVIEW TEMPLATE KOSONG (tanpa data siswa) ===== */
+async function tryLivePreviewEmpty(tpl) {
+  const dummy = { nama: 'Nama Siswa', kategori: 'Siswa Berprestasi' };
+  const f1 = $('f1').value.trim() || 'Nama Sekolah';
+  const f2 = $('f2').value.trim() || '2025/2026';
+  const f3 = $('f3').value.trim() || 'Kepala Sekolah';
+  const f4 = $('f4').value.trim() || 'Kota, Tanggal';
+  const f5 = $('f5').value.trim() || 'Wali Kelas';
+
+  let bgImg = null;
+  try { bgImg = await loadImg(tpl.file); } catch { bgImg = null; }
+  const dataURL = await drawOne(bgImg, tpl, dummy, f1, f2, f3, f4, f5, true);
+  displayOnCanvas(dataURL, false);
+  $('eb').classList.remove('show');
+}
+
+/* ===== LIVE PREVIEW ===== */
+async function tryLivePreview(overrideStudents, force) {
   const f1 = $('f1').value.trim();
   const f2 = $('f2').value.trim();
   const f3 = $('f3').value.trim();
   const f4 = $('f4').value.trim();
+  const f5 = $('f5').value.trim();
   const src = overrideStudents || students;
-  if (!src.length) return;
+  if (!src.length && !force) return;
 
   const tpl = TEMPLATES.find(t => t.id === selTpl);
   let bgImg = null;
   try { bgImg = await loadImg(tpl.file); } catch { bgImg = null; }
 
-  // Gunakan siswa pertama sebagai preview
-  const sample = src[0];
-  const dataURL = await drawOne(bgImg, tpl, sample, f1||'Nama Sekolah', f2||'2024/2025', f3||'Kepala Sekolah', f4||'Kota, Tanggal');
+  const sample = src[0] || { nama: 'Nama Siswa', kategori: 'Siswa Berprestasi' };
+  const dataURL = await drawOne(
+    bgImg, tpl, sample,
+    f1||'Nama Sekolah', f2||'2025/2026', f3||'Kepala Sekolah', f4||'Kota, Tanggal', f5||'Wali Kelas',
+    true
+  );
 
-  // Tampilkan tanpa mengubah array `rendered`
-  $('es').classList.add('hidden');
-  $('cw').classList.add('show');
-  const cv = $('cv');
-  const img = new Image();
-  img.onload = () => { cv.width = img.width; cv.height = img.height; cv.getContext('2d').drawImage(img, 0, 0); };
-  img.src = dataURL;
-
-  // Sembunyikan watermark badge live (bukan hasil generate)
-  $('wmBadge').style.display = IS_PRO ? 'none' : 'block';
-
-  // Nav disembunyikan saat live preview
+  displayOnCanvas(dataURL, false);
   $('pnav').classList.add('hidden');
+  $('eb').classList.remove('show');
   previewLive = true;
 }
 
-/* Dipanggil saat form berubah */
-let debounceTimer;
-function onFormChange() {
-  if (!students.length) return;
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(() => tryLivePreview(), 600);
+function displayOnCanvas(dataURL, showNav) {
+  $('es').classList.add('hidden');
+  $('cw').classList.add('show');
+  $('wmText').style.display = 'flex';
+  $('wmBadge').style.display = 'block';
+
+  const cv = $('cv');
+  const img = new Image();
+  img.onload = () => {
+    cv.width  = img.width;
+    cv.height = img.height;
+    cv.getContext('2d').drawImage(img, 0, 0);
+  };
+  img.src = dataURL;
 }
 
-/* ----------------------------------------------------------------
-   EXCEL IMPORT
-   ---------------------------------------------------------------- */
+let debounceTimer;
+function onFormChange() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    const tpl = TEMPLATES.find(t => t.id === selTpl);
+    if (tpl) {
+      if (students.length > 0) tryLivePreview(null, false);
+      else tryLivePreviewEmpty(tpl);
+    }
+  }, 500);
+}
+
+/* ===== PRO BLOCK ===== */
+function closeProBlock() { $('proBlock').classList.remove('show'); }
+
+/* ===== GENERATE OVERLAY ===== */
+const TIPS = [
+  'Piagam siap dalam hitungan detik ✨',
+  'Nama-nama istimewa sedang diukir...',
+  'Terima kasih sudah pakai BGY! 🎓',
+  'Sertifikat terbaik untuk siswa terbaik!',
+  'Hampir selesai, sabar ya...',
+];
+function showGO(show) { $('genOverlay').classList.toggle('show', show); }
+function setGO(msg, sub, done, total) {
+  $('goTitle').textContent = msg;
+  $('goSub').textContent   = sub || '';
+  $('goCount').textContent = `${done} / ${total} piagam selesai`;
+  const pct = total > 0 ? Math.round(done/total*100) : 0;
+  $('goP').style.width     = pct + '%';
+  $('goPct').textContent   = pct + '%';
+  $('goTips').textContent  = TIPS[done % TIPS.length];
+}
+
+/* ===== EXCEL IMPORT ===== */
 function handleXLS(file) {
   if (!file) return;
   if (!/\.(xlsx|xls)$/i.test(file.name)) { toast('Format harus .xlsx atau .xls', 'error'); return; }
@@ -812,7 +984,7 @@ function handleXLS(file) {
       rendered = []; previewLive = false;
       updateCB('Excel');
       toast(`${parsed.length} siswa berhasil dimuat dari Excel! 🎉`, 'success');
-      tryLivePreview();
+      tryLivePreview(null, false);
     } catch(err) { toast('Gagal membaca Excel: ' + err.message, 'error'); }
   };
   r.readAsBinaryString(file);
@@ -820,10 +992,8 @@ function handleXLS(file) {
 
 function updateCB(source) {
   $('cb').classList.remove('hidden');
-  $('cbN').textContent = students.length;
-  $('cbDesc').textContent = source === 'Manual'
-    ? 'Siswa (input manual)'
-    : 'Siswa berhasil dimuat';
+  $('cbN').textContent  = students.length;
+  $('cbDesc').textContent = source === 'Manual' ? 'Siswa (input manual)' : 'Siswa berhasil dimuat';
   const w = $('cbW');
   if (!IS_PRO && students.length > FREE_MAX) {
     w.classList.remove('hidden');
@@ -849,11 +1019,8 @@ function downloadSample() {
   toast('Contoh Excel berhasil diunduh!', 'success');
 }
 
-/* ----------------------------------------------------------------
-   POPUP INPUT MANUAL
-   ---------------------------------------------------------------- */
+/* ===== POPUP MANUAL ===== */
 function openPopup() {
-  // Salin students ke manualTemp supaya bisa cancel
   manualTemp = students.map(s => ({...s}));
   renderPopupList();
   $('popupOverlay').classList.add('show');
@@ -864,14 +1031,12 @@ function closePopup() {
   $('inpNama').value = '';
   $('inpKat').value  = '';
 }
-
 function renderPopupList() {
-  const list = $('siswaList');
+  const list  = $('siswaList');
   $('popupCount').textContent = manualTemp.length;
   const empty = $('siswaEmpty');
   if (!manualTemp.length) {
     empty.style.display = 'block';
-    // hapus item lama
     list.querySelectorAll('.siswa-item').forEach(el => el.remove());
     return;
   }
@@ -888,7 +1053,6 @@ function renderPopupList() {
       <button class="siswa-item-del" data-i="${i}" title="Hapus">🗑</button>`;
     list.appendChild(item);
   });
-  // hapus event lama, tambah baru
   list.querySelectorAll('.siswa-item-del').forEach(btn => {
     btn.addEventListener('click', () => {
       manualTemp.splice(+btn.dataset.i, 1);
@@ -896,11 +1060,9 @@ function renderPopupList() {
     });
   });
 }
-
 function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
-
 function addSiswaManual() {
   const nm = $('inpNama').value.trim();
   const kt = $('inpKat').value.trim();
@@ -910,13 +1072,10 @@ function addSiswaManual() {
   $('inpKat').value  = '';
   $('inpNama').focus();
   renderPopupList();
-  // scroll ke bawah list
   const list = $('siswaList');
   list.scrollTop = list.scrollHeight;
-  // Live preview dengan data sementara popup
-  tryLivePreview(manualTemp);
+  tryLivePreview(manualTemp, false);
 }
-
 function applyManual() {
   if (!manualTemp.length) { toast('Tambahkan minimal 1 siswa!', 'error'); return; }
   students = manualTemp.map(s => ({...s}));
@@ -924,26 +1083,14 @@ function applyManual() {
   updateCB('Manual');
   closePopup();
   toast(`${students.length} siswa berhasil ditambahkan! 🎉`, 'success');
-  tryLivePreview();
+  tryLivePreview(null, false);
 }
 
-/* ----------------------------------------------------------------
-   GENERATE OVERLAY
-   ---------------------------------------------------------------- */
-function showGO(show) { $('genOverlay').classList.toggle('show', show); }
-function setGO(msg, done, total) {
-  $('goTitle').textContent = msg;
-  $('goCount').textContent = `${done} / ${total} piagam selesai`;
-  $('goP').style.width = (total > 0 ? Math.round(done/total*100) : 0) + '%';
-}
-
-/* ----------------------------------------------------------------
-   DRAW SATU PIAGAM
-   ---------------------------------------------------------------- */
-function drawOne(bgImg, tpl, s, f1, f2, f3, f4) {
+/* ===== DRAW SATU PIAGAM ===== */
+function drawOne(bgImg, tpl, s, f1, f2, f3, f4, f5, isPreview) {
   return new Promise(resolve => {
     const canvas = document.createElement('canvas');
-    canvas.width = CW; canvas.height = CH;
+    canvas.width  = CW; canvas.height = CH;
     const ctx = canvas.getContext('2d');
 
     if (bgImg) {
@@ -955,7 +1102,7 @@ function drawOne(bgImg, tpl, s, f1, f2, f3, f4) {
     const pos = tpl.pos, sty = tpl.style;
 
     function putText(key, text) {
-      if (!pos[key]) return;
+      if (!pos[key] || !text) return;
       const st   = sty[key] || {};
       const sz   = Math.round((st.size||.03) * CH);
       const bold = st.bold   ? 'bold'   : 'normal';
@@ -973,20 +1120,22 @@ function drawOne(bgImg, tpl, s, f1, f2, f3, f4) {
       ctx.fillText(text, pos[key].x * CW, pos[key].y * CH);
     }
 
-    putText('judul',    'PIAGAM PENGHARGAAN');
-    putText('subjudul', 'Diberikan Kepada');
-    putText('nama',     s.nama);
-    putText('kategori', s.kategori);
-    putText('sekolah',  f1);
-    putText('tahun',    'Tahun Ajaran ' + f2);
-    putText('tanggal',  f4);
-    putText('kepala',   f3);
+    putText('judul',     'PIAGAM PENGHARGAAN');
+    putText('subjudul',  'Diberikan Kepada');
+    putText('nama',      s.nama);
+    putText('kategori',  s.kategori);
+    putText('sekolah',   f1);
+    putText('tahun',     'Tahun Ajaran ' + f2);
+    putText('tanggal',   f4);
+    putText('kepala',    f3);
+    putText('walikelas', f5);
 
-    if (!IS_PRO) {
+    // Watermark diagonal di canvas (hanya FREE versi non-preview atau saat generate)
+    if (!IS_PRO && !isPreview) {
       ctx.save();
-      ctx.globalAlpha  = .09;
+      ctx.globalAlpha  = .08;
       ctx.fillStyle    = '#555';
-      ctx.font         = `bold ${Math.round(CH*.062)}px 'Segoe UI',sans-serif`;
+      ctx.font         = `bold ${Math.round(CH*.058)}px 'Segoe UI',sans-serif`;
       ctx.textAlign    = 'center';
       ctx.textBaseline = 'middle';
       ctx.translate(CW/2, CH/2);
@@ -1004,9 +1153,9 @@ function drawFallback(ctx, tpl) {
     ['#fdf8ef','#e8c870','#9a7228'],['#edf4ff','#aacef0','#2d5fa8'],
     ['#edfbf0','#90d8a0','#2d8a40'],['#fff0f0','#f0a0a0','#9a2020'],
     ['#f5edff','#c898f8','#6a30a0'],['#fffaed','#f0d890','#8a6830'],
-    ['#e8faf8','#80d8d0','#1a7a70'],
+    ['#e8faf8','#80d8d0','#1a7a70'],['#edf2ff','#a0b4f0','#1e3a8a'],
   ];
-  const [bg, mid, acc] = pals[(tpl.id-1)%7];
+  const [bg, mid, acc] = pals[(tpl.id-1)%8];
   const g = ctx.createLinearGradient(0,0,CW,CH);
   g.addColorStop(0, bg); g.addColorStop(.5, mid+'66'); g.addColorStop(1, bg);
   ctx.fillStyle = g; ctx.fillRect(0,0,CW,CH);
@@ -1020,33 +1169,47 @@ function drawFallback(ctx, tpl) {
   ctx.fillRect(90,CH-126,CW-180,6);
 }
 
-/* ----------------------------------------------------------------
-   GENERATE SEMUA
-   ---------------------------------------------------------------- */
+/* ===== GENERATE SEMUA ===== */
 async function generate() {
+  // Cek apakah template PRO
+  if (isProTpl) {
+    $('proBlock').classList.add('show');
+    toast('Template PRO tidak bisa di-generate. Gunakan template FREE dulu!', 'error', 4000);
+    return;
+  }
+
   const f1 = $('f1').value.trim(), f2 = $('f2').value.trim();
   const f3 = $('f3').value.trim(), f4 = $('f4').value.trim();
+  const f5 = $('f5').value.trim();
+
   if (!f1||!f2||!f3||!f4) { toast('Lengkapi semua data sekolah dulu!', 'error'); return; }
-  if (!students.length)   { toast('Tambahkan data siswa dulu!', 'error'); return; }
+  if (!students.length)    { toast('Tambahkan data siswa dulu!', 'error'); return; }
 
   const tpl  = TEMPLATES.find(t => t.id === selTpl);
   const list = (!IS_PRO && students.length > FREE_MAX) ? students.slice(0, FREE_MAX) : students;
 
   showGO(true);
   try {
-    setGO('Memuat template gambar...', 0, list.length);
+    setGO('Memuat template gambar...', 'Menyiapkan kanvas...', 0, list.length);
     let bgImg = null;
     try { bgImg = await loadImg(tpl.file); } catch { bgImg = null; }
 
     rendered = [];
-    const msgs = ['Menyiapkan piagam...','Menulis nama siswa...','Menyusun halaman...','Menambahkan ornamen...','Hampir selesai...'];
+    const msgs = [
+      ['Menulis nama siswa...','Mengukir prestasi...'],
+      ['Menyusun piagam...','Sebentar lagi...'],
+      ['Menambahkan ornamen...','Mempercantik desain...'],
+      ['Finishing touch...','Hampir selesai!'],
+      ['Menyiapkan PDF...','Siapkan printer! 🖨️'],
+    ];
     for (let i = 0; i < list.length; i++) {
-      setGO(msgs[Math.min(Math.floor(i/list.length*msgs.length), msgs.length-1)], i, list.length);
-      await sleep(25);
-      rendered.push(await drawOne(bgImg, tpl, list[i], f1, f2, f3, f4));
+      const mi = Math.min(Math.floor(i/list.length*msgs.length), msgs.length-1);
+      setGO(msgs[mi][0], msgs[mi][1], i, list.length);
+      await sleep(20);
+      rendered.push(await drawOne(bgImg, tpl, list[i], f1, f2, f3, f4, f5, false));
     }
-    setGO('Selesai! ✨', list.length, list.length);
-    await sleep(400);
+    setGO('Selesai! ✨', `${list.length} piagam siap!`, list.length, list.length);
+    await sleep(500);
     showGO(false);
     previewLive = false;
     curIdx = 0;
@@ -1059,13 +1222,13 @@ async function generate() {
   }
 }
 
-/* ----------------------------------------------------------------
-   PREVIEW
-   ---------------------------------------------------------------- */
+/* ===== SHOW PREVIEW (setelah generate) ===== */
 function showPreview() {
   $('es').classList.add('hidden');
   $('cw').classList.add('show');
   $('eb').classList.add('show');
+  $('wmText').style.display = 'none'; // preview hasil generate, no watermark overlay teks
+  $('wmBadge').style.display = IS_PRO ? 'none' : 'block';
   rendered.length > 1
     ? $('pnav').classList.remove('hidden')
     : $('pnav').classList.add('hidden');
@@ -1084,9 +1247,7 @@ function renderPrev(idx) {
   img.src = rendered[idx];
 }
 
-/* ----------------------------------------------------------------
-   EXPORT PDF
-   ---------------------------------------------------------------- */
+/* ===== EXPORT PDF ===== */
 async function exportPDF() {
   if (!rendered.length) { toast('Generate piagam dulu!', 'error'); return; }
   showGO(true);
@@ -1094,7 +1255,7 @@ async function exportPDF() {
     const {jsPDF} = window.jspdf;
     const pdf = new jsPDF({orientation:'landscape', unit:'mm', format:'a4'});
     for (let i = 0; i < rendered.length; i++) {
-      setGO('Menyusun halaman PDF...', i+1, rendered.length);
+      setGO('Menyusun halaman PDF...', `Halaman ${i+1} dari ${rendered.length}`, i+1, rendered.length);
       await sleep(15);
       if (i > 0) pdf.addPage();
       pdf.addImage(rendered[i], 'JPEG', 0, 0, 297, 210);
@@ -1105,9 +1266,7 @@ async function exportPDF() {
   finally { showGO(false); }
 }
 
-/* ----------------------------------------------------------------
-   EXPORT ZIP
-   ---------------------------------------------------------------- */
+/* ===== EXPORT ZIP ===== */
 async function exportZIP() {
   if (!rendered.length) { toast('Generate piagam dulu!', 'error'); return; }
   showGO(true);
@@ -1116,7 +1275,7 @@ async function exportZIP() {
     const folder = zip.folder('piagam-naik-kelas');
     const list   = (!IS_PRO && students.length > FREE_MAX) ? students.slice(0, FREE_MAX) : students;
     for (let i = 0; i < rendered.length; i++) {
-      setGO('Mengemas file JPG...', i+1, rendered.length);
+      setGO('Mengemas file JPG...', `File ${i+1} dari ${rendered.length}`, i+1, rendered.length);
       await sleep(15);
       const b64  = rendered[i].split(',')[1];
       const safe = list[i].nama.replace(/[^a-zA-Z0-9 ]/g,'').replace(/\s+/g,'-');
@@ -1130,26 +1289,28 @@ async function exportZIP() {
   finally { showGO(false); }
 }
 
-/* ----------------------------------------------------------------
-   RESET
-   ---------------------------------------------------------------- */
+/* ===== RESET ===== */
 function resetAll() {
-  students=[]; rendered=[]; manualTemp=[]; curIdx=0; previewLive=false;
-  ['f1','f2','f3','f4'].forEach(id => $(id).value='');
+  students=[]; rendered=[]; manualTemp=[]; curIdx=0; previewLive=false; isProTpl=false;
+  ['f1','f3','f4','f5'].forEach(id => $(id).value='');
+  initTahunAjaran();
   $('fi').value='';
   $('cb').classList.add('hidden');
   $('es').classList.remove('hidden');
   $('cw').classList.remove('show');
   $('eb').classList.remove('show');
   $('pnav').classList.add('hidden');
+  $('wmText').style.display = 'none';
+  $('wmBadge').style.display = 'none';
+  $('proCrown').classList.remove('show');
+  $('proBlock').classList.remove('show');
   toast('Semua data direset 🔄', 'info');
 }
 
-/* ----------------------------------------------------------------
-   INIT & EVENTS
-   ---------------------------------------------------------------- */
+/* ===== INIT ===== */
 (function init() {
   loadDark();
+  initTahunAjaran();
   buildTG();
   runLS();
 
@@ -1161,38 +1322,35 @@ function resetAll() {
   dz.ondragleave = () => dz.classList.remove('drag');
   dz.ondrop      = e => { e.preventDefault(); dz.classList.remove('drag'); handleXLS(e.dataTransfer.files[0]); };
 
-  $('btnCF').onclick  = () => {
+  $('btnCF').onclick = () => {
     students=[]; rendered=[]; previewLive=false; $('fi').value='';
     $('cb').classList.add('hidden');
-    $('es').classList.remove('hidden');
-    $('cw').classList.remove('show');
-    $('eb').classList.remove('show');
-    $('pnav').classList.add('hidden');
+    // Jangan langsung hilang preview — munculin dummy template yg dipilih
+    const tpl = TEMPLATES.find(t => t.id === selTpl);
+    if (tpl) tryLivePreviewEmpty(tpl);
   };
 
   $('btnSmp').onclick    = downloadSample;
   $('btnManual').onclick = openPopup;
-  $('popupClose').onclick   = closePopup;
-  $('btnPopupCancel').onclick = closePopup;
-  $('btnPopupOk').onclick    = applyManual;
-  $('btnAddSiswa').onclick   = addSiswaManual;
+  $('popupClose').onclick      = closePopup;
+  $('btnPopupCancel').onclick  = closePopup;
+  $('btnPopupOk').onclick      = applyManual;
+  $('btnAddSiswa').onclick     = addSiswaManual;
 
-  // Enter di form popup = tambah siswa
   [$('inpNama'), $('inpKat')].forEach(inp => {
     inp.addEventListener('keydown', e => { if (e.key === 'Enter') addSiswaManual(); });
   });
 
-  // Klik luar popup = tutup
   $('popupOverlay').addEventListener('click', e => {
     if (e.target === $('popupOverlay')) closePopup();
   });
 
-  $('btnGen').onclick   = generate;
-  $('btnRst').onclick   = resetAll;
-  $('nbP').onclick      = () => curIdx > 0 && renderPrev(curIdx-1);
-  $('nbN').onclick      = () => curIdx < rendered.length-1 && renderPrev(curIdx+1);
-  $('btnPDF').onclick   = exportPDF;
-  $('btnZIP').onclick   = exportZIP;
+  $('btnGen').onclick = generate;
+  $('btnRst').onclick = resetAll;
+  $('nbP').onclick    = () => curIdx > 0 && renderPrev(curIdx-1);
+  $('nbN').onclick    = () => curIdx < rendered.length-1 && renderPrev(curIdx+1);
+  $('btnPDF').onclick = exportPDF;
+  $('btnZIP').onclick = exportZIP;
 
   // Keyboard nav
   document.addEventListener('keydown', e => {
@@ -1200,6 +1358,12 @@ function resetAll() {
     if (e.key==='ArrowLeft'  && curIdx > 0)               renderPrev(curIdx-1);
     if (e.key==='ArrowRight' && curIdx < rendered.length-1) renderPrev(curIdx+1);
   });
+
+  // Langsung tampilkan preview template default saat halaman load
+  setTimeout(() => {
+    const tpl = TEMPLATES.find(t => t.id === selTpl);
+    if (tpl) tryLivePreviewEmpty(tpl);
+  }, 800);
 })();
 </script>
 </body>
