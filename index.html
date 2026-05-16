@@ -545,31 +545,24 @@ const TEMPLATES = [
     // Web hanya render field dinamis + timpa paragraf + timpa nama sekolah + nama/kepala/walikelas
     staticText: true,
     pos:{
-      // Nama sekolah — timpa "SD MBG NUSANTARA" di bawah logo
-      sekolah:   {x:.500, y:.138},
-      // Nama siswa — timpa "Lonna Alvaredo"
-      nama:      {x:.500, y:.487},
-      // Kepala sekolah — timpa "CAHAYA DEWI"
-      kepala:    {x:.320, y:.893},
-      // Wali kelas — timpa "KETUT SUSILO"
-      walikelas: {x:.680, y:.893},
-      // Kota tanggal — di atas tanda tangan kanan (opsional, skip kalau template sudah ada)
-      // tanggal: {x:.680, y:.840},
+      sekolah:   {x:.500, y:.148},
+      nama:      {x:.500, y:.455},
+      kepala:    {x:.295, y:.893},
+      walikelas: {x:.665, y:.893},
+      tanggal:   {x:.665, y:.843},
     },
-    // Area paragraf yang ditimpa rectangle putih lalu ditulis ulang
-    // koordinat dalam rasio (x,y,w,h) dari ukuran canvas
-    paraRect: {x:.090, y:.548, w:.820, h:.080},
+    paraRect: {x:.085, y:.485, w:.830, h:.090},
     paraLines: [
-      // {text} akan diganti dengan nilai dinamis
       'Atas semangat belajar, usaha, dan perkembangan yang membanggakan selama tahun ajaran',
       '{tahun}. Teruslah belajar dengan gembira dan raih prestasi di kelas berikutnya.'
     ],
     style:{
-      sekolah:   {color:'#1a3560', size:.020, bold:false},
-      nama:      {color:'#1a3560', size:.090, bold:true,  font:'Georgia,serif'},
-      kepala:    {color:'#0d1a40', size:.026, bold:true},
-      walikelas: {color:'#0d1a40', size:.026, bold:true},
-      para:      {color:'#333',    size:.022},
+      sekolah:   {color:'#1a3560', size:.019, bold:false},
+      nama:      {color:'#1a3560', size:.085, bold:true, italic:true, font:"'Georgia',serif"},
+      kepala:    {color:'#0d1a40', size:.024, bold:true},
+      walikelas: {color:'#0d1a40', size:.024, bold:true},
+      tanggal:   {color:'#444',    size:.020, bold:false},
+      para:      {color:'#333',    size:.021},
     }
   },
   {
@@ -1119,17 +1112,18 @@ function drawOne(bgImg, tpl, s, f1, f2, f3, f4, f5, isPreview) {
         if (!pos[key] || !text) return;
         const st   = sty[key] || {};
         const sz   = Math.round((st.size||.025) * CH);
-        const bold = st.bold   ? 'bold' : 'normal';
+        const bold = st.bold   ? 'bold'   : 'normal';
+        const ital = st.italic ? 'italic' : 'normal';
         const ff   = st.font   || "'Segoe UI',sans-serif";
         ctx.fillStyle    = st.color || '#222';
         ctx.textAlign    = 'center';
         ctx.textBaseline = 'middle';
         let fs = sz;
-        ctx.font = `${bold} ${fs}px ${ff}`;
-        const maxW = CW * .60;
+        ctx.font = `${ital} ${bold} ${fs}px ${ff}`;
+        const maxW = CW * .65;
         while (ctx.measureText(text).width > maxW && fs > 12) {
           fs--;
-          ctx.font = `${bold} ${fs}px ${ff}`;
+          ctx.font = `${ital} ${bold} ${fs}px ${ff}`;
         }
         ctx.fillText(text, pos[key].x * CW, pos[key].y * CH);
       }
@@ -1177,6 +1171,8 @@ function drawOne(bgImg, tpl, s, f1, f2, f3, f4, f5, isPreview) {
       putStatic('kepala',    f3);
       // Timpa wali kelas
       putStatic('walikelas', f5);
+      // Kota & tanggal (opsional, kalau template ada posisinya)
+      putStatic('tanggal',   f4);
 
     } else {
       // ===== MODE NORMAL: render semua field =====
