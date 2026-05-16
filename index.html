@@ -4,6 +4,9 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Bantu Guru Yuk | Piagam Naik Kelas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Sugar+Pie&display=swap" rel="stylesheet"/>
 <link rel="icon" href="../guru-cibisd2.png" sizes="192x192" type="image/png"/>
 <link rel="shortcut icon" href="../guru-cibisd2.png" type="image/png"/>
 <link rel="apple-touch-icon" href="../guru-cibisd2.png"/>
@@ -400,7 +403,22 @@ footer a{color:#fff;text-decoration:underline;font-weight:600}
         <div class="card-title">🏫 Data Sekolah</div>
         <div class="form-group">
           <label>Nama Sekolah</label>
-          <input type="text" id="f1" placeholder="SD Kenyang MBG" oninput="onFormChange()"/>
+          <input type="text" id="f1" placeholder="SD MBG Nusantara" oninput="onFormChange()"/>
+        </div>
+        <div class="form-group">
+          <label>Naik ke Kelas</label>
+          <input type="text" id="f6" placeholder="3" maxlength="20" oninput="onFormChange()" style="width:100%"/>
+        </div>
+        <div class="form-group">
+          <label>Logo Sekolah</label>
+          <div id="logoUploadArea" style="border:2px dashed var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;background:var(--input-bg);display:flex;align-items:center;gap:10px;transition:border-color .2s" onclick="document.getElementById('logoFile').click()" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span id="logoPreviewThumb" style="width:36px;height:36px;border-radius:6px;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;overflow:hidden">🏫</span>
+            <div>
+              <div style="font-size:.78rem;font-weight:700;color:var(--text)" id="logoFileName">Klik untuk upload logo</div>
+              <div style="font-size:.68rem;color:var(--text-light)">PNG/JPG, sebaiknya transparan (PNG)</div>
+            </div>
+          </div>
+          <input type="file" id="logoFile" accept="image/*" style="display:none" onchange="handleLogoUpload(event)"/>
         </div>
         <div class="form-group">
           <label>Tahun Ajaran</label>
@@ -547,18 +565,20 @@ const TEMPLATES = [
     pos:{
       sekolah:   {x:.500, y:.148},
       nama:      {x:.500, y:.455},
+      kenaikan:  {x:.500, y:.540},
       kepala:    {x:.295, y:.893},
       walikelas: {x:.665, y:.893},
       tanggal:   {x:.665, y:.843},
     },
-    paraRect: {x:.085, y:.485, w:.830, h:.090},
+    paraRect: {x:.085, y:.575, w:.830, h:.090},
     paraLines: [
       'Atas semangat belajar, usaha, dan perkembangan yang membanggakan selama tahun ajaran',
       '{tahun}. Teruslah belajar dengan gembira dan raih prestasi di kelas berikutnya.'
     ],
     style:{
       sekolah:   {color:'#1a3560', size:.019, bold:false},
-      nama:      {color:'#1a3560', size:.085, bold:true, italic:true, font:"'Georgia',serif"},
+      nama:      {color:'#1a3560', size:.082, bold:false, italic:false, font:"'Sugar Pie',cursive"},
+      kenaikan:  {color:'#ffffff', size:.026, bold:true},
       kepala:    {color:'#0d1a40', size:.024, bold:true},
       walikelas: {color:'#0d1a40', size:.024, bold:true},
       tanggal:   {color:'#444',    size:.020, bold:false},
@@ -725,6 +745,7 @@ let rendered    = [];
 let curIdx      = 0;
 let selTpl      = 1;
 let imgCache    = {};
+let logoImg     = null; // logo sekolah yang diupload
 let previewLive = false;
 let isProTpl    = false; // apakah template yg dipilih adalah PRO
 
@@ -762,7 +783,32 @@ function loadImg(src) {
   });
 }
 
-/* ===== DARK MODE ===== */
+/* ===== LOGO UPLOAD ===== */
+function handleLogoUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      logoImg = img;
+      // Update thumb
+      const thumb = document.getElementById('logoPreviewThumb');
+      thumb.innerHTML = '';
+      const preview = document.createElement('img');
+      preview.src = ev.target.result;
+      preview.style.cssText = 'width:100%;height:100%;object-fit:contain;border-radius:4px';
+      thumb.appendChild(preview);
+      document.getElementById('logoFileName').textContent = file.name;
+      toast('Logo berhasil diupload! 🖼️', 'success');
+      onFormChange();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+
 function toggleDark() {
   const d = document.body.classList.toggle('dark');
   $('darkBtn').textContent = d ? '☀️' : '🌙';
@@ -880,10 +926,11 @@ async function tryLivePreviewEmpty(tpl) {
   const f3 = $('f3').value.trim() || 'Kepala Sekolah';
   const f4 = $('f4').value.trim() || 'Kota, Tanggal';
   const f5 = $('f5').value.trim() || 'Wali Kelas';
+  const f6 = $('f6').value.trim() || '?';
 
   let bgImg = null;
   try { bgImg = await loadImg(tpl.file); } catch { bgImg = null; }
-  const dataURL = await drawOne(bgImg, tpl, dummy, f1, f2, f3, f4, f5, true);
+  const dataURL = await drawOne(bgImg, tpl, dummy, f1, f2, f3, f4, f5, f6, true);
   displayOnCanvas(dataURL, false);
   $('eb').classList.remove('show');
 }
@@ -895,6 +942,7 @@ async function tryLivePreview(overrideStudents, force) {
   const f3 = $('f3').value.trim();
   const f4 = $('f4').value.trim();
   const f5 = $('f5').value.trim();
+  const f6 = $('f6').value.trim();
   const src = overrideStudents || students;
   if (!src.length && !force) return;
 
@@ -905,7 +953,7 @@ async function tryLivePreview(overrideStudents, force) {
   const sample = src[0] || { nama: 'Nama Siswa', kategori: 'Siswa Berprestasi' };
   const dataURL = await drawOne(
     bgImg, tpl, sample,
-    f1||'Nama Sekolah', f2||'2025/2026', f3||'Kepala Sekolah', f4||'Kota, Tanggal', f5||'Wali Kelas',
+    f1||'Nama Sekolah', f2||'2025/2026', f3||'Kepala Sekolah', f4||'Kota, Tanggal', f5||'Wali Kelas', f6||'?',
     true
   );
 
@@ -1092,7 +1140,7 @@ function applyManual() {
 }
 
 /* ===== DRAW SATU PIAGAM ===== */
-function drawOne(bgImg, tpl, s, f1, f2, f3, f4, f5, isPreview) {
+function drawOne(bgImg, tpl, s, f1, f2, f3, f4, f5, f6, isPreview) {
   return new Promise(resolve => {
     const canvas = document.createElement('canvas');
     canvas.width  = CW; canvas.height = CH;
@@ -1102,6 +1150,21 @@ function drawOne(bgImg, tpl, s, f1, f2, f3, f4, f5, isPreview) {
       ctx.drawImage(bgImg, 0, 0, CW, CH);
     } else {
       drawFallback(ctx, tpl);
+    }
+
+    // ===== LOGO WATERMARK TRANSPARAN BESAR DI TENGAH =====
+    if (logoImg && tpl.id === 1) {
+      const logoSize = CH * 0.52; // ~52% tinggi canvas
+      const lx = (CW - logoSize) / 2;
+      const ly = (CH - logoSize) / 2;
+      ctx.save();
+      ctx.globalAlpha = 0.10; // sangat transparan
+      // Hitung rasio agar proporsional
+      const ratio = Math.min(logoSize / logoImg.width, logoSize / logoImg.height);
+      const lw = logoImg.width * ratio;
+      const lh = logoImg.height * ratio;
+      ctx.drawImage(logoImg, CW/2 - lw/2, CH/2 - lh/2, lw, lh);
+      ctx.restore();
     }
 
     if (tpl.staticText) {
@@ -1143,6 +1206,55 @@ function drawOne(bgImg, tpl, s, f1, f2, f3, f4, f5, isPreview) {
       if (np) {
         ctx.fillStyle = 'rgba(255,255,255,0.0)'; // transparan — langsung timpa
         putStatic('nama', s.nama);
+      }
+
+      // Badge DINYATAKAN NAIK KE KELAS X
+      if (pos.kenaikan && f6) {
+        const kSty  = sty.kenaikan || {};
+        const kSz   = Math.round((kSty.size || .026) * CH);
+        const kText = `DINYATAKAN NAIK KE KELAS ${f6.toUpperCase()}`;
+        ctx.font     = `bold ${kSz}px 'Segoe UI',sans-serif`;
+        const tw     = ctx.measureText(kText).width;
+        const padX   = 32, padY = 14;
+        const bx     = pos.kenaikan.x * CW - tw/2 - padX;
+        const by     = pos.kenaikan.y * CH - kSz/2 - padY;
+        const bw     = tw + padX*2;
+        const bh     = kSz + padY*2;
+        const br     = bh/2;
+        // Rounded rect background (navy blue)
+        ctx.fillStyle = '#1a3a8f';
+        ctx.beginPath();
+        ctx.moveTo(bx + br, by);
+        ctx.lineTo(bx + bw - br, by);
+        ctx.arcTo(bx+bw, by, bx+bw, by+br, br);
+        ctx.lineTo(bx+bw, by+bh-br);
+        ctx.arcTo(bx+bw, by+bh, bx+bw-br, by+bh, br);
+        ctx.lineTo(bx+br, by+bh);
+        ctx.arcTo(bx, by+bh, bx, by+bh-br, br);
+        ctx.lineTo(bx, by+br);
+        ctx.arcTo(bx, by, bx+br, by, br);
+        ctx.closePath();
+        ctx.fill();
+        // Teks putih
+        ctx.fillStyle    = '#ffffff';
+        ctx.textAlign    = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font         = `bold ${kSz}px 'Segoe UI',sans-serif`;
+        ctx.fillText(kText, pos.kenaikan.x * CW, pos.kenaikan.y * CH);
+      }
+
+      // Logo kecil di atas (area logo sekolah)
+      if (logoImg) {
+        const logoSmallSize = CH * 0.09;
+        const lsx = CW/2 - logoSmallSize/2;
+        const lsy = 0.055 * CH;
+        const ratio = Math.min(logoSmallSize / logoImg.width, logoSmallSize / logoImg.height);
+        const lw = logoImg.width * ratio;
+        const lh = logoImg.height * ratio;
+        ctx.save();
+        ctx.globalAlpha = 1.0;
+        ctx.drawImage(logoImg, CW/2 - lw/2, lsy + (logoSmallSize - lh)/2, lw, lh);
+        ctx.restore();
       }
 
       // Timpa paragraf dengan tahun ajaran dinamis
@@ -1258,7 +1370,7 @@ async function generate() {
 
   const f1 = $('f1').value.trim(), f2 = $('f2').value.trim();
   const f3 = $('f3').value.trim(), f4 = $('f4').value.trim();
-  const f5 = $('f5').value.trim();
+  const f5 = $('f5').value.trim(), f6 = $('f6').value.trim();
 
   if (!f1||!f2||!f3||!f4) { toast('Lengkapi semua data sekolah dulu!', 'error'); return; }
   if (!students.length)    { toast('Tambahkan data siswa dulu!', 'error'); return; }
@@ -1284,7 +1396,7 @@ async function generate() {
       const mi = Math.min(Math.floor(i/list.length*msgs.length), msgs.length-1);
       setGO(msgs[mi][0], msgs[mi][1], i, list.length);
       await sleep(20);
-      rendered.push(await drawOne(bgImg, tpl, list[i], f1, f2, f3, f4, f5, false));
+      rendered.push(await drawOne(bgImg, tpl, list[i], f1, f2, f3, f4, f5, f6, false));
     }
     setGO('Selesai! ✨', `${list.length} piagam siap!`, list.length, list.length);
     await sleep(500);
@@ -1370,8 +1482,12 @@ async function exportZIP() {
 /* ===== RESET ===== */
 function resetAll() {
   students=[]; rendered=[]; manualTemp=[]; curIdx=0; previewLive=false; isProTpl=false;
-  ['f1','f3','f4','f5'].forEach(id => $(id).value='');
+  ['f1','f2','f3','f4','f5','f6'].forEach(id => { if($(id)) $(id).value=''; });
   initTahunAjaran();
+  logoImg = null;
+  document.getElementById('logoPreviewThumb').innerHTML = '🏫';
+  document.getElementById('logoFileName').textContent = 'Klik untuk upload logo';
+  document.getElementById('logoFile').value = '';
   $('fi').value='';
   $('cb').classList.add('hidden');
   $('es').classList.remove('hidden');
