@@ -541,23 +541,35 @@ footer a{color:#fff;text-decoration:underline;font-weight:600}
 const TEMPLATES = [
   {
     id:1, file:'templates/t1.jpg', name:'Elegan Emas', free:true,
+    // Mode static: teks SERTIFIKAT/KENAIKAN KELAS/Diberikan kepada sudah ada di JPG
+    // Web hanya render field dinamis + timpa paragraf + timpa nama sekolah + nama/kepala/walikelas
+    staticText: true,
     pos:{
-      judul:    {x:.50,y:.17}, subjudul: {x:.50,y:.27},
-      nama:     {x:.50,y:.43}, kategori: {x:.50,y:.56},
-      sekolah:  {x:.50,y:.65}, tahun:    {x:.50,y:.71},
-      tanggal:  {x:.68,y:.84}, kepala:   {x:.68,y:.91},
-      walikelas:{x:.32,y:.91}
+      // Nama sekolah — timpa "SD MBG NUSANTARA" di bawah logo
+      sekolah:   {x:.500, y:.138},
+      // Nama siswa — timpa "Lonna Alvaredo"
+      nama:      {x:.500, y:.487},
+      // Kepala sekolah — timpa "CAHAYA DEWI"
+      kepala:    {x:.320, y:.893},
+      // Wali kelas — timpa "KETUT SUSILO"
+      walikelas: {x:.680, y:.893},
+      // Kota tanggal — di atas tanda tangan kanan (opsional, skip kalau template sudah ada)
+      // tanggal: {x:.680, y:.840},
     },
+    // Area paragraf yang ditimpa rectangle putih lalu ditulis ulang
+    // koordinat dalam rasio (x,y,w,h) dari ukuran canvas
+    paraRect: {x:.090, y:.548, w:.820, h:.080},
+    paraLines: [
+      // {text} akan diganti dengan nilai dinamis
+      'Atas semangat belajar, usaha, dan perkembangan yang membanggakan selama tahun ajaran',
+      '{tahun}. Teruslah belajar dengan gembira dan raih prestasi di kelas berikutnya.'
+    ],
     style:{
-      judul:    {color:'#7a4f0a',size:.050,bold:true},
-      subjudul: {color:'#5a3a18',size:.028,italic:true},
-      nama:     {color:'#1a3560',size:.068,bold:true},
-      kategori: {color:'#8a5f10',size:.034,italic:true},
-      sekolah:  {color:'#444',  size:.026},
-      tahun:    {color:'#666',  size:.022},
-      tanggal:  {color:'#555',  size:.022},
-      kepala:   {color:'#1a3560',size:.025,bold:true},
-      walikelas:{color:'#1a3560',size:.025,bold:true}
+      sekolah:   {color:'#1a3560', size:.020, bold:false},
+      nama:      {color:'#1a3560', size:.090, bold:true,  font:'Georgia,serif'},
+      kepala:    {color:'#0d1a40', size:.026, bold:true},
+      walikelas: {color:'#0d1a40', size:.026, bold:true},
+      para:      {color:'#333',    size:.022},
     }
   },
   {
@@ -1099,38 +1111,108 @@ function drawOne(bgImg, tpl, s, f1, f2, f3, f4, f5, isPreview) {
       drawFallback(ctx, tpl);
     }
 
-    const pos = tpl.pos, sty = tpl.style;
+    if (tpl.staticText) {
+      // ===== MODE STATIC: hanya render field dinamis =====
+      const pos = tpl.pos, sty = tpl.style;
 
-    function putText(key, text) {
-      if (!pos[key] || !text) return;
-      const st   = sty[key] || {};
-      const sz   = Math.round((st.size||.03) * CH);
-      const bold = st.bold   ? 'bold'   : 'normal';
-      const ital = st.italic ? 'italic' : 'normal';
-      ctx.fillStyle    = st.color || '#222';
-      ctx.textAlign    = 'center';
-      ctx.textBaseline = 'middle';
-      let fs = sz;
-      ctx.font = `${ital} ${bold} ${fs}px 'Segoe UI',sans-serif`;
-      const maxW = CW * .72;
-      while (ctx.measureText(text).width > maxW && fs > 14) {
-        fs--;
-        ctx.font = `${ital} ${bold} ${fs}px 'Segoe UI',sans-serif`;
+      function putStatic(key, text) {
+        if (!pos[key] || !text) return;
+        const st   = sty[key] || {};
+        const sz   = Math.round((st.size||.025) * CH);
+        const bold = st.bold   ? 'bold' : 'normal';
+        const ff   = st.font   || "'Segoe UI',sans-serif";
+        ctx.fillStyle    = st.color || '#222';
+        ctx.textAlign    = 'center';
+        ctx.textBaseline = 'middle';
+        let fs = sz;
+        ctx.font = `${bold} ${fs}px ${ff}`;
+        const maxW = CW * .60;
+        while (ctx.measureText(text).width > maxW && fs > 12) {
+          fs--;
+          ctx.font = `${bold} ${fs}px ${ff}`;
+        }
+        ctx.fillText(text, pos[key].x * CW, pos[key].y * CH);
       }
-      ctx.fillText(text, pos[key].x * CW, pos[key].y * CH);
+
+      // Timpa nama sekolah (area kecil di bawah logo)
+      // Pakai rectangle putih dulu biar bersih
+      const sc = pos.sekolah;
+      if (sc) {
+        ctx.fillStyle = 'rgba(255,255,255,0.92)';
+        const sw = CW * .28, sh = Math.round(sty.sekolah.size * CH * 1.6);
+        ctx.fillRect(sc.x*CW - sw/2, sc.y*CH - sh/2, sw, sh);
+        putStatic('sekolah', f1);
+      }
+
+      // Timpa nama siswa
+      const np = pos.nama;
+      if (np) {
+        ctx.fillStyle = 'rgba(255,255,255,0.0)'; // transparan — langsung timpa
+        putStatic('nama', s.nama);
+      }
+
+      // Timpa paragraf dengan tahun ajaran dinamis
+      if (tpl.paraRect && tpl.paraLines) {
+        const r = tpl.paraRect;
+        // Bersihkan area paragraf
+        ctx.fillStyle = 'rgba(245,247,250,0.96)';
+        ctx.fillRect(r.x*CW, r.y*CH, r.w*CW, r.h*CH);
+        // Tulis ulang baris paragraf
+        const pSty = sty.para || {};
+        const pSz  = Math.round((pSty.size||.022) * CH);
+        ctx.fillStyle    = pSty.color || '#333';
+        ctx.textAlign    = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font         = `${pSz}px 'Segoe UI',sans-serif`;
+        const lineH = pSz * 1.55;
+        const totalH = tpl.paraLines.length * lineH;
+        const startY = r.y*CH + r.h*CH/2 - totalH/2 + lineH/2;
+        tpl.paraLines.forEach((line, i) => {
+          const txt = line.replace('{tahun}', f2 + '.');
+          ctx.fillText(txt, CW/2, startY + i*lineH);
+        });
+      }
+
+      // Timpa kepala sekolah
+      putStatic('kepala',    f3);
+      // Timpa wali kelas
+      putStatic('walikelas', f5);
+
+    } else {
+      // ===== MODE NORMAL: render semua field =====
+      const pos = tpl.pos, sty = tpl.style;
+
+      function putText(key, text) {
+        if (!pos[key] || !text) return;
+        const st   = sty[key] || {};
+        const sz   = Math.round((st.size||.03) * CH);
+        const bold = st.bold   ? 'bold'   : 'normal';
+        const ital = st.italic ? 'italic' : 'normal';
+        ctx.fillStyle    = st.color || '#222';
+        ctx.textAlign    = 'center';
+        ctx.textBaseline = 'middle';
+        let fs = sz;
+        ctx.font = `${ital} ${bold} ${fs}px 'Segoe UI',sans-serif`;
+        const maxW = CW * .72;
+        while (ctx.measureText(text).width > maxW && fs > 14) {
+          fs--;
+          ctx.font = `${ital} ${bold} ${fs}px 'Segoe UI',sans-serif`;
+        }
+        ctx.fillText(text, pos[key].x * CW, pos[key].y * CH);
+      }
+
+      putText('judul',     'PIAGAM PENGHARGAAN');
+      putText('subjudul',  'Diberikan Kepada');
+      putText('nama',      s.nama);
+      putText('kategori',  s.kategori);
+      putText('sekolah',   f1);
+      putText('tahun',     'Tahun Ajaran ' + f2);
+      putText('tanggal',   f4);
+      putText('kepala',    f3);
+      putText('walikelas', f5);
     }
 
-    putText('judul',     'PIAGAM PENGHARGAAN');
-    putText('subjudul',  'Diberikan Kepada');
-    putText('nama',      s.nama);
-    putText('kategori',  s.kategori);
-    putText('sekolah',   f1);
-    putText('tahun',     'Tahun Ajaran ' + f2);
-    putText('tanggal',   f4);
-    putText('kepala',    f3);
-    putText('walikelas', f5);
-
-    // Watermark diagonal di canvas (hanya FREE versi non-preview atau saat generate)
+    // Watermark diagonal (FREE, non-preview)
     if (!IS_PRO && !isPreview) {
       ctx.save();
       ctx.globalAlpha  = .08;
