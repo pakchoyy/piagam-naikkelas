@@ -559,30 +559,30 @@ footer a{color:#fff;text-decoration:underline;font-weight:600}
 const TEMPLATES = [
   {
     id:1, file:'templates/t1.jpg', name:'Elegan Emas', free:true,
-    // Mode static: teks SERTIFIKAT/KENAIKAN KELAS/Diberikan kepada sudah ada di JPG
-    // Web hanya render field dinamis + timpa paragraf + timpa nama sekolah + nama/kepala/walikelas
+    // JPG sudah berisi: SERTIFIKAT, KENAIKAN KELAS, Diberikan kepada:, garis, badge, paragraf, Kota tanggal, Kepala Sekolah, Wali Kelas X, medali
+    // Web render: logo kecil atas, nama sekolah kecil, nama siswa (Sugar Pie), badge kenaikan (timpa yang di JPG), paragraf (timpa), nama kepala+wali+tanggal
     staticText: true,
     pos:{
-      sekolah:   {x:.500, y:.148},
-      nama:      {x:.500, y:.455},
-      kenaikan:  {x:.500, y:.540},
-      kepala:    {x:.295, y:.893},
-      walikelas: {x:.665, y:.893},
-      tanggal:   {x:.665, y:.843},
+      sekolah:   {x:.500, y:.108},   // tepat di bawah logo (nama sekolah kecil)
+      nama:      {x:.500, y:.430},   // tengah area kosong antara "Diberikan kepada:" dan garis
+      kenaikan:  {x:.500, y:.545},   // posisi badge di JPG baru
+      kepala:    {x:.280, y:.900},   // nama kepala sekolah
+      walikelas: {x:.680, y:.900},   // nama wali kelas
+      tanggal:   {x:.500, y:.820},   // kota, tanggal
     },
-    paraRect: {x:.085, y:.575, w:.830, h:.090},
+    paraRect: {x:.090, y:.598, w:.820, h:.130},
     paraLines: [
-      'Atas semangat belajar, usaha, dan perkembangan yang membanggakan selama tahun ajaran',
-      '{tahun}. Teruslah belajar dengan gembira dan raih prestasi di kelas berikutnya.'
+      'Selamat atas keberhasilan dan perkembangan belajar yang membanggakan',
+      'selama Tahun Ajaran {tahun}. Teruslah bersemangat di kelas berikutnya.'
     ],
     style:{
-      sekolah:   {color:'#1a3560', size:.019, bold:false},
-      nama:      {color:'#1a3560', size:.082, bold:false, italic:false, font:"'Sugar Pie',cursive"},
-      kenaikan:  {color:'#ffffff', size:.026, bold:true},
+      sekolah:   {color:'#1a3560', size:.020, bold:false},
+      nama:      {color:'#1a3560', size:.090, bold:false, italic:false, font:"'Sugar Pie',cursive"},
+      kenaikan:  {color:'#ffffff', size:.028, bold:true},
       kepala:    {color:'#0d1a40', size:.024, bold:true},
       walikelas: {color:'#0d1a40', size:.024, bold:true},
       tanggal:   {color:'#444',    size:.020, bold:false},
-      para:      {color:'#333',    size:.021},
+      para:      {color:'#444',    size:.022},
     }
   },
   {
@@ -737,7 +737,7 @@ const TEMPLATES = [
 /* ---------------------------------------------------------------- */
 const FREE_MAX = 10;
 const IS_PRO   = false;
-const CW = 1754, CH = 1240; // A4 landscape @150dpi
+const CW = 3508, CH = 2480; // A4 landscape @300dpi — HD output
 
 let students    = [];
 let manualTemp  = [];
@@ -1191,13 +1191,10 @@ function drawOne(bgImg, tpl, s, f1, f2, f3, f4, f5, f6, isPreview) {
         ctx.fillText(text, pos[key].x * CW, pos[key].y * CH);
       }
 
-      // Timpa nama sekolah (area kecil di bawah logo)
-      // Pakai rectangle putih dulu biar bersih
+      // Timpa nama sekolah (di bawah logo kecil)
       const sc = pos.sekolah;
-      if (sc) {
-        ctx.fillStyle = 'rgba(255,255,255,0.92)';
-        const sw = CW * .28, sh = Math.round(sty.sekolah.size * CH * 1.6);
-        ctx.fillRect(sc.x*CW - sw/2, sc.y*CH - sh/2, sw, sh);
+      if (sc && f1) {
+        // Tidak perlu rect putih — background JPG di area itu sudah putih/terang
         putStatic('sekolah', f1);
       }
 
@@ -1243,38 +1240,38 @@ function drawOne(bgImg, tpl, s, f1, f2, f3, f4, f5, f6, isPreview) {
         ctx.fillText(kText, pos.kenaikan.x * CW, pos.kenaikan.y * CH);
       }
 
-      // Logo kecil di atas (area logo sekolah)
+      // Logo kecil di atas (di posisi logo sekolah — y ~5% hingga ~10%)
       if (logoImg) {
-        const logoSmallSize = CH * 0.09;
-        const lsx = CW/2 - logoSmallSize/2;
-        const lsy = 0.055 * CH;
-        const ratio = Math.min(logoSmallSize / logoImg.width, logoSmallSize / logoImg.height);
-        const lw = logoImg.width * ratio;
+        const maxLogoH = CH * 0.085;
+        const maxLogoW = CW * 0.10;
+        const ratio = Math.min(maxLogoW / logoImg.width, maxLogoH / logoImg.height);
+        const lw = logoImg.width  * ratio;
         const lh = logoImg.height * ratio;
+        const ly = CH * 0.028; // top y
         ctx.save();
         ctx.globalAlpha = 1.0;
-        ctx.drawImage(logoImg, CW/2 - lw/2, lsy + (logoSmallSize - lh)/2, lw, lh);
+        ctx.drawImage(logoImg, CW/2 - lw/2, ly, lw, lh);
         ctx.restore();
       }
 
       // Timpa paragraf dengan tahun ajaran dinamis
       if (tpl.paraRect && tpl.paraLines) {
         const r = tpl.paraRect;
-        // Bersihkan area paragraf
-        ctx.fillStyle = 'rgba(245,247,250,0.96)';
+        // Bersihkan area paragraf dengan warna JPG (putih/abu sangat tipis)
+        ctx.fillStyle = 'rgba(255,255,255,0.85)';
         ctx.fillRect(r.x*CW, r.y*CH, r.w*CW, r.h*CH);
         // Tulis ulang baris paragraf
         const pSty = sty.para || {};
         const pSz  = Math.round((pSty.size||.022) * CH);
-        ctx.fillStyle    = pSty.color || '#333';
+        ctx.fillStyle    = pSty.color || '#444';
         ctx.textAlign    = 'center';
         ctx.textBaseline = 'middle';
         ctx.font         = `${pSz}px 'Segoe UI',sans-serif`;
-        const lineH = pSz * 1.55;
+        const lineH = pSz * 1.65;
         const totalH = tpl.paraLines.length * lineH;
         const startY = r.y*CH + r.h*CH/2 - totalH/2 + lineH/2;
         tpl.paraLines.forEach((line, i) => {
-          const txt = line.replace('{tahun}', f2 + '.');
+          const txt = line.replace('{tahun}', f2);
           ctx.fillText(txt, CW/2, startY + i*lineH);
         });
       }
@@ -1323,18 +1320,18 @@ function drawOne(bgImg, tpl, s, f1, f2, f3, f4, f5, f6, isPreview) {
     // Watermark diagonal (FREE, non-preview)
     if (!IS_PRO && !isPreview) {
       ctx.save();
-      ctx.globalAlpha  = .08;
-      ctx.fillStyle    = '#555';
-      ctx.font         = `bold ${Math.round(CH*.058)}px 'Segoe UI',sans-serif`;
+      ctx.globalAlpha  = .06;
+      ctx.fillStyle    = '#1a3560';
+      ctx.font         = `bold ${Math.round(CH*.048)}px 'Segoe UI',sans-serif`;
       ctx.textAlign    = 'center';
       ctx.textBaseline = 'middle';
       ctx.translate(CW/2, CH/2);
-      ctx.rotate(-Math.PI/8);
-      ctx.fillText('FREE VERSION — bantuguruyuk.web.id', 0, 0);
+      ctx.rotate(-Math.PI/7);
+      ctx.fillText('bantuguruyuk.web.id', 0, 0);
       ctx.restore();
     }
 
-    resolve(canvas.toDataURL('image/jpeg', .94));
+    resolve(canvas.toDataURL('image/jpeg', .98));
   });
 }
 
